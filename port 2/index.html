@@ -84,13 +84,14 @@
 
                 <!-- Cinematic Preview (New) -->
                 <button class="hero-preview-card reveal js-open-modal" type="button" data-modal-kind="video"
-                    data-src="watch-video.mp4" data-title="Featured Showreel" data-tags="SaaS Demo • Product Film">
+                    data-src="motiovational-edit-with-audio.mp4" data-title="Hero Motion Reel"
+                    data-tags="Motion Design • Graphics • Premium">
                     <div class="preview-thumb">
-                        <img src="screen.png" alt="Featured Showreel preview" />
+                        <img src="studio-image.jpg" alt="Hero motion reel preview" />
                         <div class="play-overlay" aria-hidden="true">
                             <div class="play-btn">▶</div>
                         </div>
-                        <div class="preview-badge">FEATURED SHOWREEL</div>
+                        <div class="preview-badge">HERO MOTION REEL</div>
                     </div>
                 </button>
 
@@ -194,13 +195,14 @@
 
         <!-- Reels wall -->
         <div class="reels-wall" aria-label="Video reels wall">
+            <!-- SaaS demo -->
             <button class="reel-card reveal js-open-modal" type="button" data-filter-item="demo"
-                data-modal-kind="video" data-src="watch-video.mp4" data-title="SaaS Demo • Product Walkthrough"
-                data-tags="Demo • Motion • Branding">
+                data-modal-kind="video" data-src="saas-product-demp.mp4" data-title="SaaS Product Demo"
+                data-tags="Startup • Demo • Motion">
                 <div class="reel-media">
-                    <video class="reel-video" muted playsinline loop preload="metadata" poster="screen.png"
+                    <video class="reel-video" muted playsinline loop preload="metadata" poster="watch-raw.png"
                         data-preview="true">
-                        <source src="watch-video.mp4" type="video/mp4" />
+                        <source src="saas-product-demp.mp4" type="video/mp4" />
                     </video>
                     <div class="reel-overlay" aria-hidden="true">
                         <span class="reel-chip">DEMO</span>
@@ -208,44 +210,85 @@
                     </div>
                 </div>
                 <div class="reel-meta">
-                    <div class="reel-name">Premium SaaS Demo</div>
-                    <div class="reel-tags">Demo • Product • Design</div>
+                    <div class="reel-name">SaaS Product Demo</div>
+                    <div class="reel-tags">Startup • Demo • Motion</div>
                 </div>
             </button>
 
+            <!-- Motion / graphic design reels -->
             <button class="reel-card reveal js-open-modal" type="button" data-filter-item="ads"
-                data-modal-kind="video" data-src="shoes-video.mp4" data-title="Product Reel • Shoes" data-tags="Reel • Product • Hook">
+                data-modal-kind="video" data-src="motion-graphic-design.mp4" data-title="Motion Graphic Design Reel"
+                data-tags="Motion • Graphics • Demo">
                 <div class="reel-media">
                     <video class="reel-video" muted playsinline loop preload="metadata" poster="studio-image.jpg"
                         data-preview="true">
-                        <source src="shoes-video.mp4" type="video/mp4" />
+                        <source src="motion-graphic-design.mp4" type="video/mp4" />
                     </video>
                     <div class="reel-overlay" aria-hidden="true">
-                        <span class="reel-chip">REEL</span>
+                        <span class="reel-chip">MOTION</span>
                         <span class="reel-play">▶</span>
                     </div>
                 </div>
                 <div class="reel-meta">
-                    <div class="reel-name">Shoes Product Reel</div>
-                    <div class="reel-tags">Reel • Hook • Product</div>
+                    <div class="reel-name">Motion Graphic Design</div>
+                    <div class="reel-tags">Motion • Graphics • Demo</div>
                 </div>
             </button>
 
             <button class="reel-card reveal js-open-modal" type="button" data-filter-item="ads"
-                data-modal-kind="video" data-src="women-video.mp4" data-title="Lifestyle Reel" data-tags="Lifestyle • Vertical • Ad">
+                data-modal-kind="video" data-src="isometric-city.mp4" data-title="Isometric City Reel"
+                data-tags="Motion • 3D • Scene">
+                <div class="reel-media">
+                    <video class="reel-video" muted playsinline loop preload="metadata" poster="studio-image.jpg"
+                        data-preview="true">
+                        <source src="isometric-city.mp4" type="video/mp4" />
+                    </video>
+                    <div class="reel-overlay" aria-hidden="true">
+                        <span class="reel-chip">SCENE</span>
+                        <span class="reel-play">▶</span>
+                    </div>
+                </div>
+                <div class="reel-meta">
+                    <div class="reel-name">Isometric City</div>
+                    <div class="reel-tags">Motion • 3D • Scene</div>
+                </div>
+            </button>
+
+            <button class="reel-card reveal js-open-modal" type="button" data-filter-item="ads"
+                data-modal-kind="video" data-src="shoes-video.mp4" data-title="E-commerce Reel • Shoes"
+                data-tags="E-commerce • Product • Vertical">
+                <div class="reel-media">
+                    <video class="reel-video" muted playsinline loop preload="metadata" poster="shoes-raw.jpg"
+                        data-preview="true">
+                        <source src="shoes-video.mp4" type="video/mp4" />
+                    </video>
+                    <div class="reel-overlay" aria-hidden="true">
+                        <span class="reel-chip">ECOM</span>
+                        <span class="reel-play">▶</span>
+                    </div>
+                </div>
+                <div class="reel-meta">
+                    <div class="reel-name">Shoes E-commerce Reel</div>
+                    <div class="reel-tags">E-commerce • Product • Vertical</div>
+                </div>
+            </button>
+
+            <button class="reel-card reveal js-open-modal" type="button" data-filter-item="ads"
+                data-modal-kind="video" data-src="women-video.mp4" data-title="E-commerce Reel • Women"
+                data-tags="E-commerce • Lifestyle • Vertical">
                 <div class="reel-media">
                     <video class="reel-video" muted playsinline loop preload="metadata" poster="shopping (2) - Copy.webp"
                         data-preview="true">
                         <source src="women-video.mp4" type="video/mp4" />
                     </video>
                     <div class="reel-overlay" aria-hidden="true">
-                        <span class="reel-chip">AD</span>
+                        <span class="reel-chip">ECOM</span>
                         <span class="reel-play">▶</span>
                     </div>
                 </div>
                 <div class="reel-meta">
-                    <div class="reel-name">Lifestyle Ad Reel</div>
-                    <div class="reel-tags">Lifestyle • Vertical • Ad</div>
+                    <div class="reel-name">Women E-commerce Reel</div>
+                    <div class="reel-tags">E-commerce • Lifestyle • Vertical</div>
                 </div>
             </button>
 
@@ -253,7 +296,7 @@
                 data-modal-kind="video" data-src="vaporwave-motivation.mp4" data-title="Vaporwave Motivation"
                 data-tags="Style • Edit • Vertical">
                 <div class="reel-media">
-                    <video class="reel-video" muted playsinline loop preload="metadata" poster="screen.png"
+                    <video class="reel-video" muted playsinline loop preload="metadata" poster="studio-image.jpg"
                         data-preview="true">
                         <source src="vaporwave-motivation.mp4" type="video/mp4" />
                     </video>
@@ -265,6 +308,46 @@
                 <div class="reel-meta">
                     <div class="reel-name">Vaporwave Motivation</div>
                     <div class="reel-tags">Style • Edit • Vertical</div>
+                </div>
+            </button>
+
+            <!-- E-commerce: watch -->
+            <button class="reel-card reveal js-open-modal" type="button" data-filter-item="ads"
+                data-modal-kind="video" data-src="watch-video.mp4" data-title="E-commerce Reel • Watch"
+                data-tags="E-commerce • Product • Vertical">
+                <div class="reel-media">
+                    <video class="reel-video" muted playsinline loop preload="metadata" poster="watch-raw.png"
+                        data-preview="true">
+                        <source src="watch-video.mp4" type="video/mp4" />
+                    </video>
+                    <div class="reel-overlay" aria-hidden="true">
+                        <span class="reel-chip">ECOM</span>
+                        <span class="reel-play">▶</span>
+                    </div>
+                </div>
+                <div class="reel-meta">
+                    <div class="reel-name">Watch E-commerce Reel</div>
+                    <div class="reel-tags">E-commerce • Product • Vertical</div>
+                </div>
+            </button>
+
+            <!-- Phone demo -->
+            <button class="reel-card reveal js-open-modal" type="button" data-filter-item="demo"
+                data-modal-kind="video" data-src="PHONE-DEMO.mp4" data-title="Phone Demo"
+                data-tags="Demo • Phone • Walkthrough">
+                <div class="reel-media">
+                    <video class="reel-video" muted playsinline loop preload="metadata" poster="watch-raw.png"
+                        data-preview="true">
+                        <source src="PHONE-DEMO.mp4" type="video/mp4" />
+                    </video>
+                    <div class="reel-overlay" aria-hidden="true">
+                        <span class="reel-chip">DEMO</span>
+                        <span class="reel-play">▶</span>
+                    </div>
+                </div>
+                <div class="reel-meta">
+                    <div class="reel-name">Phone Demo</div>
+                    <div class="reel-tags">Demo • Phone • Walkthrough</div>
                 </div>
             </button>
         </div>
@@ -299,9 +382,9 @@
             </button>
 
             <button class="masonry-item reveal js-open-modal" type="button" data-filter-item="stills"
-                data-style="Architectural_Concepts" data-modal-kind="image" data-src="screen.png"
+                data-style="Architectural_Concepts" data-modal-kind="image" data-src="watch-raw.png"
                 data-title="Architectural Concept" data-tags="Architecture • Concept • Mood">
-                <img src="screen.png" alt="Architectural concept still" loading="lazy" />
+                <img src="watch-raw.png" alt="Architectural concept still" loading="lazy" />
                 <div class="masonry-caption">
                     <span class="cap-style">Architectural Concepts</span>
                     <span class="cap-tag">Concept</span>
@@ -574,126 +657,30 @@
         </div>
     </section>
 
-    <!-- ===== PROJECTS ===== -->
-    <section class="section" id="projects">
+    <!-- ===== CASE STUDIES (Light) ===== -->
+    <section class="section" id="case-studies">
         <div class="container">
-            <span class="section-label"><span class="dot" style="background: var(--accent-blue)"></span> Technical
-                Projects</span>
+            <span class="section-label"><span class="dot" style="background: var(--accent-blue)"></span> Case Studies</span>
+            <p class="section-subtitle">
+                I keep this portfolio focused on the look. For deeper technical breakdowns, open the technical portfolio.
+            </p>
             <div class="projects-grid">
-
                 <div class="project-card reveal">
                     <div class="project-thumb">
-                        <img src="steeve_automate.png" alt="Steeve Automate: Viral AI News Agent" />
+                        <img src="steeve_automate.png" alt="Automated daily content pipeline case study" />
                     </div>
                     <div class="project-info">
-                        <h3>Steeve Automate: Viral AI News Agent</h3>
-                        <p>Fully autonomous multi-agent pipeline monitoring AI news and generating viral vertical videos daily via GPT-4o & HeyGen.</p>
+                        <h3>Automated Daily Content Pipeline (n8n)</h3>
+                        <p>Auto-posting system with scheduling, captions, hashtag suggestions, and editorial routing.</p>
                         <div class="project-tags">
-                            <span class="tag">n8n</span><span class="tag">HeyGen</span><span
-                                class="tag">Creatomate</span>
+                            <span class="tag">n8n</span><span class="tag">Automation</span><span class="tag">Content</span>
                         </div>
                         <div class="project-links">
-                            <a href="https://github.com/roshan30-git/ROSHAN-portfolio/tree/main/kachua-workflows"
-                                target="_blank">GitHub →</a>
+                            <a href="#offers">Get this pipeline →</a>
+                            <a href="https://roshan30-git.github.io/ROSHAN-portfolio/" target="_blank">Technical portfolio →</a>
                         </div>
                     </div>
                 </div>
-
-                <div class="project-card reveal">
-                    <div class="project-thumb">
-                        <img src="screen.png" alt="Enterprise B2B Orchestrator" />
-                    </div>
-                    <div class="project-info">
-                        <h3>Enterprise B2B Sales Orchestrator</h3>
-                        <p>50+ node production-grade funnel with lead scraping, dynamic sequencing, and Supabase CRM integration.</p>
-                        <div class="project-tags">
-                            <span class="tag">n8n</span><span class="tag">Whisper</span><span
-                                class="tag">Supabase</span>
-                        </div>
-                        <div class="project-links">
-                            <a href="https://github.com/roshan30-git/ROSHAN-portfolio/tree/main/kachua-workflows"
-                                target="_blank">GitHub →</a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="project-card reveal">
-                    <div class="project-thumb">
-                        <img src="screen.png" alt="Meta Ad Automation" />
-                    </div>
-                    <div class="project-info">
-                        <h3>Meta Ad Campaign Automation</h3>
-                        <p>54-node n8n orchestration automating campaign creation, creative rotation, and budget
-                            management.</p>
-                        <div class="project-tags">
-                            <span class="tag">n8n</span><span class="tag">Meta Ads API</span><span
-                                class="tag">Automation</span>
-                        </div>
-                        <div class="project-links">
-                            <a href="https://github.com/roshan30-git/ROSHAN-portfolio/tree/main/n8n%20workflows"
-                                target="_blank">GitHub →</a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="project-card reveal">
-                    <div class="project-thumb">
-                        <img src="studio-image.jpg" alt="Gamma Watermark Remover" />
-                    </div>
-                    <div class="project-info">
-                        <h3>Gamma Watermark Remover</h3>
-                        <p>Local-first tool to remove Gamma watermarks from PDF/PPTX. Batch processing with privacy
-                            focus.</p>
-                        <div class="project-tags">
-                            <span class="tag">Python</span><span class="tag">PDF</span><span class="tag">MIT</span>
-                        </div>
-                        <div class="project-links">
-                            <a href="https://github.com/roshan30-git/Gamma-Studio-Watermark-Remover"
-                                target="_blank">GitHub →</a>
-                            <a href="https://gamma-studio-watermark-remover-001.streamlit.app/" target="_blank">Live
-                                Demo →</a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="project-card reveal">
-                    <div class="project-thumb">
-                        <img src="shopping (2) - Copy.webp" alt="GTU Design Thinking Canvas" />
-                    </div>
-                    <div class="project-info">
-                        <h3>GTU Design Thinking Canvas</h3>
-                        <p>Interactive digital workspace for GTU Design Engineering curriculum with standardized ANSI
-                            canvases.</p>
-                        <div class="project-tags">
-                            <span class="tag">TypeScript</span><span class="tag">Canvas API</span><span
-                                class="tag">WebApp</span>
-                        </div>
-                        <div class="project-links">
-                            <a href="https://github.com/roshan30-git/GTU-DT-CANVAS" target="_blank">GitHub →</a>
-                            <a href="https://gtu-dt-canvas.vercel.app/" target="_blank">Live Demo →</a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="project-card reveal">
-                    <div class="project-thumb">
-                        <img src="studio-image.jpg" alt="Jyotish.AI" />
-                    </div>
-                    <div class="project-info">
-                        <h3>Jyotish.AI</h3>
-                        <p>Minimalist Vedic astrology & numerology app powered by Google Gemini for actionable insights.
-                        </p>
-                        <div class="project-tags">
-                            <span class="tag">TypeScript</span><span class="tag">Gemini AI</span><span
-                                class="tag">Astrology</span>
-                        </div>
-                        <div class="project-links">
-                            <a href="https://github.com/roshan30-git/Jyotish.AI-Modern-Minimalist-Vedic-Astrology-Numerology-Powered-by-AI"
-                                target="_blank">GitHub →</a>
-                        </div>
-                    </div>
-                </div>
-
             </div>
         </div>
     </section>
