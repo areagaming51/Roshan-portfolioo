@@ -1,0 +1,1290 @@
+{
+  "name": "ai.table",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "222da0b7-f329-48a7-9be7-1c7628cf724b",
+      "name": "When clicking ‘Execute workflow’",
+      "type": "n8n-nodes-base.manualTrigger",
+      "position": [
+        -5216,
+        -1824
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o",
+          "cachedResultName": "gpt-4o"
+        },
+        "options": {}
+      },
+      "id": "d356b269-3aed-423b-9081-94b7e9cddf82",
+      "name": "OpenAI Chat Model2",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        -4608,
+        -1552
+      ],
+      "typeVersion": 1.2
+    },
+    {
+      "parameters": {
+        "content": "### 3) Connect OpenAI (API Key)\n1. In **n8n → Credentials → New → OpenAI API**  \n2. Paste your **OpenAI API key**  \n3. In **OpenAI Chat Model**, select your credential and a **vision-capable** chat model (e.g., `gpt-4o-mini`, `gpt-4o`, or your configured vision model)\n",
+        "height": 400,
+        "width": 224,
+        "color": 3
+      },
+      "id": "5c88611a-c49c-4841-98c5-8517e5b578f3",
+      "name": "Sticky Note66",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -4688,
+        -1840
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "[\n  {\n    \"StudentID\": \"S001\",\n    \"Term\": \"Fall 2025\",\n    \"Selected\": [\n      \"CS-201 | Computer Systems | 3\",\n      \"CS-220 | Databases | 3\",\n      \"CS-210 | Web Development | 3\",\n      \"GEN-107 | Introduction to Sociology | 3\",\n      \"GEN-109 | Environmental Science | 4\"\n    ],\n    \"Rationale\": \"Student met prerequisites for sophomore-level Computer Science courses and added two Gen Eds for balance.\"\n  }\n]\n"
+      },
+      "id": "71eedfd9-ad0a-4be3-be9a-d4665fd4adfc",
+      "name": "Structured Output Parser",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "position": [
+        -4288,
+        -1840
+      ],
+      "typeVersion": 1.3
+    },
+    {
+      "parameters": {
+        "content": "### 1) Connect Google Sheets (OAuth2)\n1. In **n8n → Credentials → New → Google Sheets (OAuth2)**  \n2. Sign in with your Google account and grant access  \n3. In each Google Sheets node, select your **Spreadsheet** and the appropriate **Worksheet**:  \n   - **data** (raw spend)  \n   - **Lookup** (channel reference table)  \n   - **render pivot** (output tab)  \n\nhttps://docs.google.com/spreadsheets/d/10IMnD8JhiR4lTlNFQTG_Auopg8haAiEt3_G9EKWTqLw/edit?gid=572766543#gid=572766543\n",
+        "height": 656,
+        "width": 224,
+        "color": 3
+      },
+      "id": "63659c3d-cf5c-4ef1-abfb-11296f41e8c4",
+      "name": "Sticky Note67",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -5008,
+        -2272
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=\n    \"StudentID\": \"{{$json.StudentID}}\",\n    \"Name\": \"{{$json.Name}}\",\n    \"Program\": \"{{$json.Program}}\",\n    \"Year\": \"{{$json.Year}}\",\n    \"CompletedCourses\": \"{{$json.CompletedCourses}}\"\n\n",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "You are a registrar scheduling assistant. Using ONLY the provided Students sheet (10 sophomores with pipe-separated CompletedCourses), generate exactly FIVE courses per student for the current term (Fall 2025) from the catalog below, following all constraints.\n\nCATALOG\n# Format: CourseID | Title | Credits | Program | Category | Prereqs(pipe-separated AND) | Offered(Fall/Spring/Both)\nGEN-101 | College Writing I | 3 | GenEd | Gen Ed |  | Both\nGEN-102 | College Writing II | 3 | GenEd | Gen Ed | GEN-101 | Both\nGEN-103 | Quantitative Reasoning | 3 | GenEd | Gen Ed |  | Both\nGEN-104 | Introduction to Philosophy | 3 | GenEd | Gen Ed |  | Both\nGEN-105 | Public Speaking | 3 | GenEd | Gen Ed |  | Both\nGEN-106 | World History Since 1500 | 3 | GenEd | Gen Ed |  | Both\nGEN-107 | Introduction to Sociology | 3 | GenEd | Gen Ed |  | Both\nGEN-108 | General Psychology | 3 | GenEd | Gen Ed |  | Both\nGEN-109 | Environmental Science | 4 | GenEd | Gen Ed (Lab) |  | Both\nGEN-110 | Introduction to Statistics | 3 | GenEd | Gen Ed | GEN-103 | Both\n\nCS-101 | Intro to Programming (Python) | 4 | Computer Science BS | Major Core |  | Both\nCS-102 | Data Structures | 4 | Computer Science BS | Major Core | CS-101 | Both\nCS-103 | Discrete Mathematics | 3 | Computer Science BS | Major Core | GEN-103 | Both\nCS-201 | Computer Systems | 3 | Computer Science BS | Major Core | CS-102 | Fall\nCS-202 | Algorithms | 4 | Computer Science BS | Major Core | CS-102|CS-103 | Spring\nCS-210 | Web Development | 3 | Computer Science BS | Major Elective | CS-101 | Both\nCS-220 | Databases | 3 | Computer Science BS | Major Core | CS-102 | Both\n\nDS-101 | Intro to Data Science | 3 | Data Science BS | Major Core | GEN-110|CS-101 | Both\nDS-201 | Linear Algebra for DS | 3 | Data Science BS | Major Core | GEN-103 | Both\nDS-202 | Probability & Statistics II | 3 | Data Science BS | Major Core | GEN-110 | Both\nDS-210 | Data Visualization | 3 | Data Science BS | Major Elective | DS-101 | Both\n\nBUS-101 | Principles of Management | 3 | Business Administration BBA | Major Core |  | Both\nBUS-102 | Microeconomics | 3 | Business Administration BBA | Major Core |  | Both\nBUS-103 | Macroeconomics | 3 | Business Administration BBA | Major Core |  | Both\nBUS-201 | Financial Accounting | 3 | Business Administration BBA | Major Core | GEN-110 | Both\nBUS-202 | Marketing Principles | 3 | Business Administration BBA | Major Core | BUS-101 | Both\nBUS-210 | Business Analytics with Excel | 3 | Business Administration BBA | Major Elective | GEN-110 | Both\n\nPSY-101 | Introduction to Psychology | 3 | Psychology BA | Major Core |  | Both\nPSY-201 | Research Methods in Psychology | 3 | Psychology BA | Major Core | GEN-110|PSY-101 | Both\nPSY-210 | Cognitive Psychology | 3 | Psychology BA | Major Elective | PSY-101 | Fall\n\nBIO-101 | General Biology I (Lab) | 4 | Biology BS (Pre-Med) | Major Core |  | Fall\nBIO-102 | General Biology II (Lab) | 4 | Biology BS (Pre-Med) | Major Core | BIO-101 | Spring\nCHM-101 | General Chemistry I (Lab) | 4 | Biology BS (Pre-Med) | Major Core |  | Fall\nCHM-102 | General Chemistry II (Lab) | 4 | Biology BS (Pre-Med) | Major Core | CHM-101 | Spring\nBIO-201 | Genetics | 3 | Biology BS (Pre-Med) | Major Core | BIO-102|GEN-110 | Fall\nBIO-210 | Cell Biology | 3 | Biology BS (Pre-Med) | Major Elective | BIO-102 | Spring\n\nENGR-101 | Intro to Engineering | 3 | Mechanical Engineering BS | Major Core |  | Both\nENGR-102 | Engineering Graphics | 3 | Mechanical Engineering BS | Major Core |  | Both\nMTH-121 | Calculus I | 4 | Mechanical Engineering BS | Major Core | GEN-103 | Both\nMTH-122 | Calculus II | 4 | Mechanical Engineering BS | Major Core | MTH-121 | Both\nPHY-151 | Physics I (Calc-Based, Lab) | 4 | Mechanical Engineering BS | Major Core | MTH-121 | Fall\nPHY-152 | Physics II (Calc-Based, Lab) | 4 | Mechanical Engineering BS | Major Core | PHY-151|MTH-122 | Spring\nME-201 | Statics | 3 | Mechanical Engineering BS | Major Core | PHY-151|MTH-122 | Fall\nME-210 | Materials Science | 3 | Mechanical Engineering BS | Major Elective | CHM-101 | Spring\n\nNUR-101 | Foundations of Nursing | 4 | Nursing BSN | Major Core |  | Fall\nNUR-102 | Health Assessment | 3 | Nursing BSN | Major Core | NUR-101 | Spring\nNUR-201 | Pathophysiology | 3 | Nursing BSN | Major Core | CHM-101|BIO-101 | Fall\nNUR-210 | Pharmacology | 3 | Nursing BSN | Major Core | NUR-201 | Spring\n\nENG-101 | Intro to Literary Studies | 3 | English Literature BA | Major Core | GEN-101 | Both\nENG-201 | British Literature I | 3 | English Literature BA | Major Core | ENG-101 | Fall\nENG-210 | Creative Writing Workshop | 3 | English Literature BA | Major Elective | ENG-101 | Both\n\nECON-101 | Principles of Microeconomics | 3 | Economics BA | Major Core |  | Both\nECON-102 | Principles of Macroeconomics | 3 | Economics BA | Major Core |  | Both\nECON-201 | Intermediate Microeconomics | 3 | Economics BA | Major Core | ECON-101|GEN-110 | Fall\nECON-202 | Intermediate Macroeconomics | 3 | Economics BA | Major Core | ECON-102|GEN-110 | Spring\n\nART-101 | Design Foundations | 3 | Graphic Design BFA | Major Core |  | Both\nART-102 | Drawing I | 3 | Graphic Design BFA | Major Core |  | Both\nART-201 | Typography | 3 | Graphic Design BFA | Major Core | ART-101 | Fall\nART-210 | Digital Imaging | 3 | Graphic Design BFA | Major Elective | ART-101 | Both\n\nCONSTRAINTS\n1) Exactly 5 courses per student; target total 15–17 credits.\n2) Enforce prerequisites: all listed prereqs must already be in CompletedCourses.\n3) Use only courses offered in Fall or Both for Fall 2025.\n4) Prioritize Major Core, then Major Elective, then Gen Ed. Include at least one Gen Ed if still needed.\n5) No duplicates or courses already completed.\n6) Prefer 200-level progression where available and allowed by prereqs.\n\nINPUT\n- Students: an array of records from the Google Sheet with fields:\n  StudentID, Name, Program, Year, CompletedCourses (pipe-separated CourseIDs)\n\nOUTPUT\nReturn a JSON array; one object per student:\n[\n  {\n    \"StudentID\": \"S001\",\n    \"Term\": \"Fall 2025\",\n    \"Selected\": [\n      \"CS-201 | Computer Systems | 3\",\n      \"CS-220 | Databases | 3\",\n      \"CS-210 | Web Development | 3\",\n      \"GEN-107 | Introduction to Sociology | 3\",\n      \"GEN-109 | Environmental Science | 4\"\n    ],\n    \"Rationale\": \"Student met prerequisites for sophomore-level Computer Science courses and added two Gen Eds for balance.\"\n  }\n]\n\n\nIMPLEMENTATION NOTES\n- Parse CompletedCourses by splitting on \"|\".\n- Treat Prereqs as AND (e.g., \"CS-102|CS-103\" requires both).\n- \"GenEd\" courses apply to any program.\n- If a student cannot reach 5 major-appropriate courses, fill remaining slots with Gen Eds without prerequisites that are offered in Fall/Both to stay within 15–17 credits.\n",
+          "passthroughBinaryImages": true
+        }
+      },
+      "id": "9341b082-fc5b-4bfe-90a6-fa603601db3b",
+      "name": "Scheduling Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        -4448,
+        -2048
+      ],
+      "executeOnce": false,
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f239fdfb-f2ed-4e30-bb81-560cb624cdb9",
+              "name": "StudentID",
+              "type": "string",
+              "value": "={{ $json.output[0].StudentID }}"
+            },
+            {
+              "id": "249bdf9e-6f9b-4e45-a5c9-288128c03e51",
+              "name": "Schedule",
+              "type": "string",
+              "value": "={{ $json['output[0].Selected'] }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "c8da29dc-6073-41ba-bf47-770d7dc2cc22",
+      "name": "Set Fields",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        -3824,
+        -2048
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "operation": "clear",
+        "documentId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "10IMnD8JhiR4lTlNFQTG_Auopg8haAiEt3_G9EKWTqLw",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/10IMnD8JhiR4lTlNFQTG_Auopg8haAiEt3_G9EKWTqLw/edit?usp=drivesdk",
+          "cachedResultName": "Student Details"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "list",
+          "value": 572766543,
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/10IMnD8JhiR4lTlNFQTG_Auopg8haAiEt3_G9EKWTqLw/edit#gid=572766543",
+          "cachedResultName": "schedule"
+        }
+      },
+      "id": "f163b93c-cef6-4827-a874-f863965bfec9",
+      "name": "Clear sheet1",
+      "type": "n8n-nodes-base.googleSheets",
+      "position": [
+        -3616,
+        -2048
+      ],
+      "typeVersion": 4.7
+    },
+    {
+      "parameters": {
+        "content": "### 🎓 AI Course Scheduler from Completed Prereqs (Google Sheets + OpenAI)\n\nCreate a **Fall 2025 course schedule** for each student based on what they’ve already completed, catalog prerequisites, and term availability (Fall/Both). Reads students from Google Sheets → asks an AI agent to select **exactly 5 courses** (target **15–17 credits**, no duplicates, prereqs enforced) → appends each student’s schedule to a **schedule** tab.\n\n",
+        "height": 1056,
+        "width": 2144,
+        "color": 7
+      },
+      "id": "29a42bf8-0b28-40f7-a112-cdbc085b375d",
+      "name": "Sticky Note56",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -5760,
+        -2768
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "### ⚙️ Setup (only 2 steps)\n\n#### 1) Connect Google Sheets (OAuth2)\n- In **n8n → Credentials → New → Google Sheets (OAuth2)**, sign in and grant access  \n- In the Google Sheets nodes, select your spreadsheet and these tabs:\n  - **Sheet1** (input students)\n  - **schedule** (output)\n\n> Example spreadsheet (replace with your own):  \n> - Input: `.../edit#gid=0`  \n> - Output: `.../edit#gid=572766543`\n\n#### 2) Connect OpenAI (API Key)\n- In **n8n → Credentials → New → OpenAI API**, paste your key  \n- In the **OpenAI Chat Model** node, select that credential and a chat model (e.g., `gpt-4o`)\n\n\n\n- 📧 **rbreen@ynteractive.com**  \n- 🔗 **Robert Breen** — https://www.linkedin.com/in/robert-breen-29429625/  \n- 🌐 **ynteractive.com** — https://ynteractive.com\n\n",
+        "height": 1056,
+        "width": 400
+      },
+      "id": "5b221397-9a8d-4d88-a7ec-749e1fc07a1b",
+      "name": "Sticky Note4",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -6224,
+        -2416
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "10IMnD8JhiR4lTlNFQTG_Auopg8haAiEt3_G9EKWTqLw",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/10IMnD8JhiR4lTlNFQTG_Auopg8haAiEt3_G9EKWTqLw/edit?usp=drivesdk",
+          "cachedResultName": "Student Details"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gid=0",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/10IMnD8JhiR4lTlNFQTG_Auopg8haAiEt3_G9EKWTqLw/edit#gid=0",
+          "cachedResultName": "Sheet1"
+        },
+        "options": {}
+      },
+      "id": "df9d1a59-1f7d-4cff-a98d-acfb396611e5",
+      "name": "Get Student Data",
+      "type": "n8n-nodes-base.googleSheets",
+      "position": [
+        -4944,
+        -1760
+      ],
+      "typeVersion": 4.7
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "output[0].Selected",
+        "include": "allOtherFields",
+        "options": {}
+      },
+      "id": "2e4e1be7-e498-43f4-8a9e-de325a401344",
+      "name": "Split Schedule",
+      "type": "n8n-nodes-base.splitOut",
+      "position": [
+        -4080,
+        -2048
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "10IMnD8JhiR4lTlNFQTG_Auopg8haAiEt3_G9EKWTqLw",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/10IMnD8JhiR4lTlNFQTG_Auopg8haAiEt3_G9EKWTqLw/edit?usp=drivesdk",
+          "cachedResultName": "Student Details"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "list",
+          "value": 572766543,
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/10IMnD8JhiR4lTlNFQTG_Auopg8haAiEt3_G9EKWTqLw/edit#gid=572766543",
+          "cachedResultName": "schedule"
+        },
+        "columns": {
+          "value": {},
+          "schema": [
+            {
+              "id": "StudentID",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "StudentID",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Schedule",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "Schedule",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "autoMapInputData",
+          "matchingColumns": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "c1cc3e8f-883d-423f-8ce4-72966bc2679c",
+      "name": "Append Schedule",
+      "type": "n8n-nodes-base.googleSheets",
+      "position": [
+        -3408,
+        -2048
+      ],
+      "typeVersion": 4.7
+    },
+    {
+      "parameters": {},
+      "id": "733860be-f014-450b-a7f4-56081cad5eca",
+      "name": "Daily Schedule Check",
+      "type": "n8n-nodes-base.cron",
+      "position": [
+        -5712,
+        -624
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "filters": {}
+      },
+      "id": "8bc3c405-e393-42a3-ac08-c555d6734709",
+      "name": "Read Class Schedule",
+      "type": "n8n-nodes-base.microsoftExcel",
+      "position": [
+        -5536,
+        -752
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get current date and time\nconst now = new Date();\nconst today = now.toISOString().split('T')[0];\nconst currentHour = now.getHours();\n\n// Get all schedule data\nconst scheduleData = $input.all();\n\n// Filter classes for today and upcoming reminders\nconst todayClasses = scheduleData.filter(item => {\n  const classDate = item.json['Class Date'];\n  const classTime = item.json['Class Time'];\n  const reminderTime = item.json['Reminder Time (Hours)'] || 1;\n  \n  // Check if class is today\n  if (classDate === today) {\n    // Parse class time\n    const [hours, minutes] = classTime.split(':');\n    const classHour = parseInt(hours);\n    \n    // Check if we need to send reminder\n    const hoursUntilClass = classHour - currentHour;\n    \n    // Send reminder if within reminder window\n    if (hoursUntilClass > 0 && hoursUntilClass <= reminderTime) {\n      return true;\n    }\n  }\n  \n  return false;\n});\n\n// Also get tomorrow's classes for evening prep\nconst tomorrow = new Date(now);\ntomorrow.setDate(tomorrow.getDate() + 1);\nconst tomorrowDate = tomorrow.toISOString().split('T')[0];\n\nconst tomorrowClasses = scheduleData.filter(item => {\n  return item.json['Class Date'] === tomorrowDate && currentHour >= 18; // After 6 PM\n});\n\n// Combine today's reminders and tomorrow's prep\nconst classesToProcess = [...todayClasses, ...tomorrowClasses];\n\nreturn classesToProcess.map(item => ({\n  json: {\n    ...item.json,\n    reminderType: todayClasses.includes(item) ? 'today' : 'tomorrow',\n    currentTime: now.toISOString()\n  }\n}));"
+      },
+      "id": "adca908c-321e-4947-b964-75c8bba143db",
+      "name": "Filter Today's Classes",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        -5280,
+        -624
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json['Class Name']}}",
+              "operation": "isNotEmpty"
+            }
+          ]
+        }
+      },
+      "id": "35295b47-8674-40d4-af1c-b1cf66fc9f90",
+      "name": "Has Classes Today?",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        -5056,
+        -720
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "filters": {}
+      },
+      "id": "3283b85d-4fa6-4385-bb97-fa5e176f9d28",
+      "name": "Read Student Contacts",
+      "type": "n8n-nodes-base.microsoftExcel",
+      "position": [
+        -4832,
+        -720
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get class data and student contacts\nconst classData = $('Filter Today\\'s Classes').all();\nconst studentContacts = $input.all();\n\n// Create reminder messages for each class\nconst reminders = [];\n\nclassData.forEach(classItem => {\n  const classInfo = classItem.json;\n  \n  // Find students enrolled in this class\n  const enrolledStudents = studentContacts.filter(student => {\n    const studentClasses = student.json['Enrolled Classes'] || '';\n    return studentClasses.includes(classInfo['Class Name']);\n  });\n  \n  // Create reminder for each enrolled student\n  enrolledStudents.forEach(student => {\n    const reminderMessage = classInfo.reminderType === 'today' \n      ? `🔔 Class Reminder: \"${classInfo['Class Name']}\" starts at ${classInfo['Class Time']} today!\\n\\n📍 Location: ${classInfo['Location'] || 'TBD'}\\n👨‍🏫 Instructor: ${classInfo['Instructor'] || 'TBD'}\\n📚 Topic: ${classInfo['Topic'] || 'Regular class'}\\n\\n⚠️ Please arrive 5 minutes early. Don't forget your materials!`\n      : `📅 Tomorrow's Schedule: You have \"${classInfo['Class Name']}\" at ${classInfo['Class Time']}\\n\\n📍 Location: ${classInfo['Location'] || 'TBD'}\\n👨‍🏫 Instructor: ${classInfo['Instructor'] || 'TBD'}\\n📚 Topic: ${classInfo['Topic'] || 'Regular class'}\\n\\n💡 Tip: Prepare your materials tonight!`;\n    \n    reminders.push({\n      json: {\n        studentName: `${student.json['First Name']} ${student.json['Last Name']}`,\n        studentEmail: student.json['Email'],\n        studentPhone: student.json['Phone'],\n        className: classInfo['Class Name'],\n        classTime: classInfo['Class Time'],\n        classDate: classInfo['Class Date'],\n        location: classInfo['Location'],\n        instructor: classInfo['Instructor'],\n        topic: classInfo['Topic'],\n        reminderType: classInfo.reminderType,\n        message: reminderMessage,\n        preferredContact: student.json['Preferred Contact'] || 'email'\n      }\n    });\n  });\n});\n\nreturn reminders;"
+      },
+      "id": "70919ce6-6df2-47f4-85ba-2fb7ebcf218e",
+      "name": "Create Student Reminders",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        -4608,
+        -624
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "batchSize": 10,
+        "options": {}
+      },
+      "id": "d9473c92-4498-4e7a-bdb1-3e9652999960",
+      "name": "Split Into Batches",
+      "type": "n8n-nodes-base.splitInBatches",
+      "position": [
+        -4400,
+        -624
+      ],
+      "typeVersion": 3
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.preferredContact}}",
+              "value2": "email"
+            }
+          ]
+        }
+      },
+      "id": "f2a81302-2c35-42d8-bbb4-0469583f215b",
+      "name": "Email or SMS?",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        -4176,
+        -624
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "jsCode": "// Prepare email data\nconst reminderData = $input.all();\n\nconst emailsToSend = reminderData.map(item => {\n  const data = item.json;\n  \n  const subject = data.reminderType === 'today' \n    ? `🔔 Class Reminder: ${data.className} Today`\n    : `📅 Tomorrow's Class: ${data.className}`;\n  \n  const htmlBody = `\n    <!DOCTYPE html>\n    <html>\n    <head>\n        <style>\n            body { font-family: Arial, sans-serif; color: #333; margin: 0; padding: 20px; }\n            .container { max-width: 600px; margin: 0 auto; }\n            .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 8px 8px 0 0; text-align: center; }\n            .content { background: #f9f9f9; padding: 25px; border-radius: 0 0 8px 8px; }\n            .class-info { background: white; padding: 20px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #667eea; }\n            .info-row { margin: 10px 0; }\n            .info-label { font-weight: bold; color: #667eea; }\n            .footer { text-align: center; margin-top: 20px; color: #666; font-size: 12px; }\n            .emoji { font-size: 18px; }\n        </style>\n    </head>\n    <body>\n        <div class=\"container\">\n            <div class=\"header\">\n                <h1><span class=\"emoji\">${data.reminderType === 'today' ? '🔔' : '📅'}</span> Class ${data.reminderType === 'today' ? 'Reminder' : 'Preview'}</h1>\n            </div>\n            <div class=\"content\">\n                <p>Hello ${data.studentName},</p>\n                <p>${data.reminderType === 'today' ? 'Your class is starting soon!' : 'Here\\'s your schedule for tomorrow:'}</p>\n                \n                <div class=\"class-info\">\n                    <div class=\"info-row\"><span class=\"info-label\">📚 Class:</span> ${data.className}</div>\n                    <div class=\"info-row\"><span class=\"info-label\">🕐 Time:</span> ${data.classTime}</div>\n                    <div class=\"info-row\"><span class=\"info-label\">📅 Date:</span> ${data.classDate}</div>\n                    <div class=\"info-row\"><span class=\"info-label\">📍 Location:</span> ${data.location || 'TBD'}</div>\n                    <div class=\"info-row\"><span class=\"info-label\">👨‍🏫 Instructor:</span> ${data.instructor || 'TBD'}</div>\n                    <div class=\"info-row\"><span class=\"info-label\">📖 Topic:</span> ${data.topic || 'Regular class session'}</div>\n                </div>\n                \n                ${data.reminderType === 'today' \n                  ? '<p><strong>⚠️ Please arrive 5 minutes early and don\\'t forget your materials!</strong></p>'\n                  : '<p><strong>💡 Tip: Prepare your materials tonight for a smooth start tomorrow!</strong></p>'\n                }\n                \n                <p>Have a great class!</p>\n            </div>\n            <div class=\"footer\">\n                <p>This is an automated reminder from your class management system.</p>\n            </div>\n        </div>\n    </body>\n    </html>\n  `;\n  \n  return {\n    json: {\n      to: data.studentEmail,\n      subject: subject,\n      body: data.message,\n      html: htmlBody,\n      studentName: data.studentName,\n      className: data.className\n    }\n  };\n});\n\nreturn emailsToSend;"
+      },
+      "id": "d892bec1-b7f3-43cf-b305-5690a688dd26",
+      "name": "Prepare Email Reminders",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        -3952,
+        -720
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "jsCode": "// Prepare SMS data\nconst reminderData = $input.all();\n\nconst smsToSend = reminderData.map(item => {\n  const data = item.json;\n  \n  const smsMessage = data.reminderType === 'today'\n    ? `🔔 Class Reminder: \"${data.className}\" starts at ${data.classTime} today at ${data.location || 'TBD'}. Arrive 5 min early!`\n    : `📅 Tomorrow: \"${data.className}\" at ${data.classTime} (${data.location || 'TBD'}). Prepare tonight!`;\n  \n  return {\n    json: {\n      to: data.studentPhone,\n      message: smsMessage,\n      studentName: data.studentName,\n      className: data.className\n    }\n  };\n});\n\nreturn smsToSend;"
+      },
+      "id": "b7efbf9d-a736-4dcd-9492-9312de175979",
+      "name": "Prepare SMS Reminders",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        -3952,
+        -528
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "mode": "id",
+          "value": "abc@google.com"
+        },
+        "start": "={{$json['Class Date']}}T{{$json['Class Time'].split(':')[0].padStart(2, '0')}}:{{$json['Class Time'].split(':')[1].padStart(2, '0')}}:00",
+        "end": "={{$json['Class Date']}}T{{(parseInt($json['Class Time'].split(':')[0]) + 1).toString().padStart(2, '0')}}:{{$json['Class Time'].split(':')[1].padStart(2, '0')}}:00",
+        "additionalFields": {}
+      },
+      "id": "8dc454ed-185b-4c2a-8803-4ccb10c39baf",
+      "name": "Sync to Google Calendar",
+      "type": "n8n-nodes-base.googleCalendar",
+      "position": [
+        -4832,
+        -528
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "filters": {}
+      },
+      "id": "bab11c0d-421a-4bd9-a63f-5a10e4f32e90",
+      "name": "Read Reminder Log",
+      "type": "n8n-nodes-base.microsoftExcel",
+      "position": [
+        -3728,
+        -624
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get existing log data\nconst existingLogs = $input.all();\n\n// Get sent reminders data\nconst sentEmails = $('Prepare Email Reminders').all() || [];\nconst sentSMS = $('Prepare SMS Reminders').all() || [];\n\n// Create log entries for sent reminders\nconst newLogEntries = [];\n\n// Log email reminders\nsentEmails.forEach(email => {\n  newLogEntries.push({\n    'Log ID': 'LOG-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9),\n    'Timestamp': new Date().toISOString(),\n    'Student Name': email.json.studentName,\n    'Class Name': email.json.className,\n    'Contact Method': 'Email',\n    'Contact Info': email.json.to,\n    'Status': 'Sent',\n    'Reminder Type': 'Class Reminder',\n    'Message Preview': email.json.subject\n  });\n});\n\n// Log SMS reminders\nsentSMS.forEach(sms => {\n  newLogEntries.push({\n    'Log ID': 'LOG-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9),\n    'Timestamp': new Date().toISOString(),\n    'Student Name': sms.json.studentName,\n    'Class Name': sms.json.className,\n    'Contact Method': 'SMS',\n    'Contact Info': sms.json.to,\n    'Status': 'Sent',\n    'Reminder Type': 'Class Reminder',\n    'Message Preview': sms.json.message.substring(0, 50) + '...'\n  });\n});\n\n// Combine existing logs with new entries\nconst allLogs = [...existingLogs, ...newLogEntries];\n\nreturn allLogs.map(item => ({ json: item }));"
+      },
+      "id": "e0a76f93-8a18-484a-b9ac-c7806b0bc914",
+      "name": "Update Reminder Log",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        -3520,
+        -624
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "resource": "worksheet",
+        "operation": "append",
+        "workbook": {
+          "__rl": true,
+          "mode": "id",
+          "value": "3456yuhh"
+        },
+        "worksheet": {
+          "__rl": true,
+          "mode": "id",
+          "value": "=23456yuytrewerfgn"
+        },
+        "options": {}
+      },
+      "id": "ca08ce4a-df99-4748-aa9c-1228c3c3a218",
+      "name": "Save Reminder Log",
+      "type": "n8n-nodes-base.microsoftExcel",
+      "position": [
+        -3296,
+        -624
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "content": "### **Workflow Process**\n1. **Daily Check** → Triggers at scheduled time\n2. **Read Schedule** → Gets today's class schedule\n3. **Filter Classes** → Identifies today's classes\n4. **Check Students** → Gets enrolled student contacts\n5. **Sync Calendar** → Updates Google Calendar\n6. **Create Reminders** → Generates personalized messages\n7. **Send Notifications** → Delivers via email/SMS\n8. **Log Activity** → Records reminder status",
+        "height": 220,
+        "width": 600
+      },
+      "id": "b55e4859-3320-4632-9d4e-5776b32ab2c1",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -5600,
+        -1088
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "199d8034-ffc0-47f8-8db1-91c6bddd1f4f",
+      "name": "When chat message received",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "position": [
+        -2336,
+        -2512
+      ],
+      "webhookId": "5308edc9-738b-4aae-a789-214e2392579a",
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o",
+        "options": {}
+      },
+      "id": "ffd57349-6fea-4724-a10b-7fab34fbcaa4",
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        -1888,
+        -1696
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {},
+      "id": "5abe8892-19b0-4436-bf31-f4769465dca7",
+      "name": "Window Buffer Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "position": [
+        -1472,
+        -1696
+      ],
+      "typeVersion": 1.3
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Use this tool when you’re asked to retrieve events data.",
+        "operation": "getAll",
+        "calendar": {
+          "__rl": true,
+          "mode": "list",
+          "value": "",
+          "cachedResultName": ""
+        },
+        "options": {
+          "timeMin": "={{ $fromAI('start_date') }}",
+          "timeMax": "={{ $fromAI('end_date') }}"
+        }
+      },
+      "id": "2e9a9b05-f2ea-4cd7-bad8-2fb241a65425",
+      "name": "Google Calendar - Get Events",
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "position": [
+        -1088,
+        -1712
+      ],
+      "typeVersion": 1.2
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Use this Google Calendar tool when you are asked to create an event.",
+        "calendar": {
+          "__rl": true,
+          "mode": "list",
+          "value": "",
+          "cachedResultName": ""
+        },
+        "start": "={{ $fromAI('start_date') }} ",
+        "end": "={{ $fromAI('end_date') }} ",
+        "useDefaultReminders": false,
+        "additionalFields": {
+          "attendees": [],
+          "description": "={{ $fromAI('event_description') }} ",
+          "summary": "={{ $fromAI('event_title') }} "
+        }
+      },
+      "id": "abef9ea2-6e29-4862-8f2a-c44aedba6cc2",
+      "name": "Google Calendar - Create events",
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "position": [
+        -672,
+        -1712
+      ],
+      "typeVersion": 1.2
+    },
+    {
+      "parameters": {
+        "content": "## Tools Agent - Calendar AI Agent\n\nThis **node** configures the **AI agent** for interaction with Google Calendar.  \nIt includes the following features:\n\n- A **prompt source**: This is the user message derived from the chat input of the preceding node (`When chat message is received`).\n- A **system message**: This defines the system prompt to guide the AI agent's behavior. It incorporates the variable `{{ DateTime.local().toFormat('cccc d LLLL yyyy') }`, allowing the AI agent to determine the current date and interact with Google Calendar accordingly. For example, the agent can understand a request like \"Create an event called 'n8n workflow review' for next Tuesday.\"\n\n\nn8n nodes come with built-in **guardrails**, ensuring that if the user requests tasks outside the AI agent's setup, it may not function as intended. (Feel free to test it!)\n",
+        "height": 560,
+        "width": 1520,
+        "color": 7
+      },
+      "id": "7c5f3d97-4dc9-4bf5-ad12-3905022f2ca4",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -2000,
+        -2896
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput }}",
+        "options": {
+          "systemMessage": "=You are a Google Calendar assistant.\nYour primary goal is to assist the user in managing their calendar effectively using two tools: Event Creation and Event Retrieval. Always base your responses on the current date: \n{{ DateTime.local().toFormat('cccc d LLLL yyyy') }}.\nGeneral Guidelines:\nIf the user's initial message is vague (e.g., \"hello\" or a generic greeting) or does not specify a request, explain your capabilities clearly:\nExample: \"Hello! I can help you manage your Google Calendar. You can ask me to create an event or retrieve event data. What would you like me to do?\"\nIf the user specifies a request in their first message, begin preparing to use the appropriate tool:\nFor event creation, gather necessary details like start date, end date, title, and description.\nFor event retrieval, ask for the date range or time period they want to query.\nTool: Event Creation\nWhen asked to create an event:\n\nRequest the start and end dates/times from the user.\nDate format: YYYY-MM-DD HH:mm:ss\nCollect the following information:\nstart_date: Exact start date and time of the event.\nend_date: Exact end date and time of the event.\nevent_title: Event title in uppercase. Suggest one if not provided.\nevent_description: Generate a brief description and present it for confirmation.\nTool: Event Retrieval\nWhen asked to retrieve events:\n\nAsk for the date range or period they are interested in. Examples:\nFor \"last week,\" retrieve events from Monday of the previous week to Friday of the same week.\nFor \"today,\" use the current date.\nFormat the date range:\nstart_date: Start date and time in YYYY-MM-DD HH:mm:ss.\nend_date: End date and time in YYYY-MM-DD HH:mm:ss.\nKey Behaviors:\nClarity: Provide a clear and helpful introduction when the user's request is unclear.\nValidation: Confirm details with the user before finalizing actions.\nAdaptation: Handle varying levels of detail in requests (e.g., \"Add a meeting for next Monday morning\" or \"Retrieve my events for this weekend\").\nProactivity: Offer suggestions to fill in missing details or clarify ambiguous inputs.\nLanguage Matching: Ensure all interactions, including event titles, descriptions, and messages, are in the user's language to provide a seamless experience."
+        }
+      },
+      "id": "c7b93e51-d8db-44c0-a90f-e48a2eae0343",
+      "name": "Calendar AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        -1472,
+        -2512
+      ],
+      "typeVersion": 1.7
+    },
+    {
+      "parameters": {
+        "content": "## OpenAI chat model\n\nThis node specifies the chat model used by the agent.  \nIn the template, the **default LLM is gpt-4o** for its high relevance.\n\nOther options:\n- You can **try gpt-4o-mini**, which is more cost-effective.\n- You can also choose **other LLM providers besides OpenAI**, but make sure the LLM you select **supports tool-calling**.\n",
+        "height": 720,
+        "width": 320,
+        "color": 5
+      },
+      "id": "502c900b-6327-453e-9967-82a0f8320c9e",
+      "name": "Sticky Note2",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -2000,
+        -2272
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## Window buffer memory\n\nThis node manages the **memory** of the agent, specifically the **context window length** for chat history.  \nThe default is set to 5 messages.\n\nNote:  \nThe **memory** is **temporary**. If you want to **store conversations with the agent**, you should use other nodes like **Postgres chat memory**.  \nThis can be easily set up with services like **[Supabase](https://supabase.com/)**.\n",
+        "height": 720,
+        "width": 320,
+        "color": 5
+      },
+      "id": "fe533c48-5c26-4098-8432-c6fe07cd9098",
+      "name": "Sticky Note3",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1600,
+        -2272
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## Google Calendar - Create Events\n\nThis sub-node is a tool used by the AI agent.  \nIts purpose is to **create events based on the user input**.  \nFor example: \"Can you create an event 'Quarter revenue meeting' on [date] from [hour] to [hour] ?\"\n\nThe AI agent is designed to **use this tool only** when it has a **date range**.  \nIf the user hasn’t provided a **date range**, the AI agent will **ask the user** for it.  \nThe variables `{{ $fromAI('start_date') }}` and `{{ $fromAI('end_date') }}` are dynamically filled by the AI.\n\nBefore creating the event, the AI agent will **confirm with the user** if the **title** and **description** of the event are correct.  \nThe variables used for this are:\n- `{{ $fromAI('event_title') }}`\n- `{{ $fromAI('event_description') }}`\n",
+        "height": 720,
+        "width": 320,
+        "color": 5
+      },
+      "id": "8183a570-c7e2-4780-af9e-33ab59b3556a",
+      "name": "Sticky Note5",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -784,
+        -2272
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## Having fun with it ? Here’s how to level up this AI agent !  \n\nThis workflow demonstrates **how easily you can set up an AI agent to call tools** for you using **n8n**.  \nThe tasks here are **useful but very basic**.  \n\nIf you want to **enhance the tool-calling capabilities**, consider the following:\n\n- Explore the **\"options\"** in the Google Calendar nodes to see additional features you can use.  \n  For example, let the AI agent add attendees to events it creates.\n\n- Implement the AI agent with your **teammates and link it to each calendar**.  \n  Use a `{{ $fromAI('') }}` variable for the calendar field and refine the prompts to suit your needs.\n\n- Add **more actions** for the AI agent to perform with the **Google Calendar API**, expanding its functionality.\n",
+        "height": 380,
+        "width": 720,
+        "color": 4
+      },
+      "id": "9df2bf7c-51dc-4e8e-87e8-805f228ef836",
+      "name": "Sticky Note6",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1520,
+        -1728
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## Chat trigger - When a message is received\n\nThis node is the **entry point of the workflow**.  \nIt triggers the workflow whenever a message is sent to the **chat interface**.\n\nOptions with n8n:\n- **Embed the chat interface** anywhere you want.\n- Use a **webhook node** instead of this node to connect with interfaces like **[Streamlit](https://docs.streamlit.io/develop/tutorials/llms/build-conversational-apps)** or **[OpenWebUI](https://docs.openwebui.com/)**.\n- Use nodes for communication platforms (**Slack**, **Teams**, **Discord**, etc.) if you know how to configure them.\n",
+        "height": 560,
+        "width": 320,
+        "color": 7
+      },
+      "id": "b16c1922-4ee1-474e-b839-bf20b073b936",
+      "name": "Sticky Note7",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -2432,
+        -2896
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## Google Calendar - Get Events\n\nThis sub-node is a tool used by the AI agent.  \nIts purpose is to **retrieve events based on the user input**.  \nFor example: *\"Can you give me the events from last week about internal process ?\"*\n\nThe AI agent is designed to **use this tool only** when it has a **date range**.  \nIf the user hasn’t provided a date range, the **AI agent will ask the user** for it.\n\nThe **variables** `{{ $fromAI('start_date') }}` and `{{ $fromAI('end_date') }}` are **dynamically filled by the AI**.\n",
+        "height": 720,
+        "width": 320,
+        "color": 5
+      },
+      "id": "4982328a-91a4-4314-987e-fca11cc2005b",
+      "name": "Sticky Note8",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1184,
+        -2288
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## 2. Advanced way: Using Expressions\nIn this `Set` node, we set dates using [Luxon expressions](https://docs.n8n.io/code-examples/expressions/luxon/) for the following formats:\n\nNow - `{{$now}}`\nCurrent time with seconds - `{{$now.toLocaleString(DateTime.TIME_WITH_SECONDS)}}`\nToday - `{{$today}}`\nTomorrow - `{{$today.plus({days: 1})}}`\nOne hour ago - `{{$now.minus({hours: 1})}}`\nWeekday name - `{{$today.weekdayLong}}`\n\n",
+        "height": 400,
+        "width": 560
+      },
+      "name": "Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -2096,
+        -528
+      ],
+      "typeVersion": 1,
+      "id": "337d595f-3362-4cb5-8ae1-3177806f5886"
+    },
+    {
+      "parameters": {
+        "content": "### Click the `Execute Workflow` button and double click on the nodes to see the input and output items.",
+        "height": 100,
+        "width": 420
+      },
+      "name": "Note3",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -2912,
+        -512
+      ],
+      "typeVersion": 1,
+      "id": "6b6f16df-e945-4023-9d0b-b5766a22b6a7"
+    },
+    {
+      "parameters": {
+        "action": "calculate",
+        "value": "={{$now}}",
+        "duration": 12,
+        "timeUnit": "hours",
+        "options": {}
+      },
+      "name": "12 Hours from now",
+      "type": "n8n-nodes-base.dateTime",
+      "position": [
+        -2064,
+        -720
+      ],
+      "typeVersion": 1,
+      "id": "b449af88-1dd0-4ae5-8b3f-65990f1e054b"
+    },
+    {
+      "parameters": {
+        "content": "## 1. Simple Way: Using the Date & Time node\nThere are two actions available within the `Date & Time` node:\n1. Calculating a date - adding/substracting minutes,hours, days, etc.\n2. Formatting a date\n\n",
+        "height": 340,
+        "width": 560
+      },
+      "name": "Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -2096,
+        -896
+      ],
+      "typeVersion": 1,
+      "id": "6584ad5e-5aa6-48e4-ae07-62de4d325bce"
+    },
+    {
+      "parameters": {
+        "content": "### 2.1 Working with an existing time string\nAs items pass between nodes, n8n saves dates as ISO strings. This means that in order to work with the data as a date again, we need to convert it back using `DateTime.fromISO('yyyy-mm-dd')`\n. Once doing that, we are able to apply date and time function again such as : `{{DateTime.fromISO($json[\"Now\"]).toFormat('yyyy LLL dd')}}`",
+        "height": 320,
+        "width": 480
+      },
+      "name": "Note4",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1600,
+        -432
+      ],
+      "typeVersion": 1,
+      "id": "c19940cd-5668-497b-b1aa-cf2855df19d7"
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "Now",
+              "value": "={{$now}}"
+            },
+            {
+              "name": "Current time with seconds",
+              "value": "={{$now.toLocaleString(DateTime.TIME_WITH_SECONDS)}}"
+            },
+            {
+              "name": "Today",
+              "value": "={{$today}}"
+            },
+            {
+              "name": "Tomorrow",
+              "value": "={{$today.plus({days: 1})}}"
+            },
+            {
+              "name": "One hour from now",
+              "value": "={{$now.minus({hours: 1})}}"
+            },
+            {
+              "name": "Weekday",
+              "value": "={{$today.weekdayLong}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Set times",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        -2064,
+        -272
+      ],
+      "typeVersion": 1,
+      "id": "a1aa5a16-0edd-4dae-a179-40d8aaa1653c"
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "Current time",
+              "value": "={{DateTime.fromISO($json[\"Now\"])}}"
+            },
+            {
+              "name": "Current time formatted",
+              "value": "={{DateTime.fromISO($json[\"Now\"]).toFormat('yyyy LLL dd')}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Edit times",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        -1504,
+        -272
+      ],
+      "typeVersion": 1,
+      "id": "29fee6ed-159f-4fa4-9c50-7c47bdc5d140"
+    },
+    {
+      "parameters": {
+        "value": "={{$now}}",
+        "toFormat": "MMMM DD YYYY",
+        "options": {}
+      },
+      "name": "Format - MMMM DD YY",
+      "type": "n8n-nodes-base.dateTime",
+      "position": [
+        -1824,
+        -720
+      ],
+      "typeVersion": 1,
+      "id": "0d7fef33-b193-45a9-8ffa-42ca609ea3b7"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "firebase",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -3072,
+        -1168
+      ],
+      "id": "1a2f6712-9d72-46d8-838b-7baed0c5c3c4",
+      "name": "Webhook",
+      "webhookId": "1427225a-46f7-43f5-9b96-8aa2b226eaa8"
+    },
+    {
+      "parameters": {
+        "operation": "query"
+      },
+      "type": "n8n-nodes-base.googleFirebaseCloudFirestore",
+      "typeVersion": 1.1,
+      "position": [
+        -2864,
+        -1168
+      ],
+      "id": "512652e0-fff6-4d3d-9c67-812ae74fe1f0",
+      "name": "Query a document",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "message": "hello",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chat",
+      "typeVersion": 1,
+      "position": [
+        -2656,
+        -1168
+      ],
+      "id": "b773ac11-5d4a-49a9-a04d-683e23bee666",
+      "name": "Respond to Chat"
+    }
+  ],
+  "connections": {
+    "Set Fields": {
+      "main": [
+        [
+          {
+            "node": "Clear sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clear sheet1": {
+      "main": [
+        [
+          {
+            "node": "Append Schedule",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Schedule": {
+      "main": [
+        [
+          {
+            "node": "Set Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Student Data": {
+      "main": [
+        [
+          {
+            "node": "Scheduling Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Scheduling Agent": {
+      "main": [
+        [
+          {
+            "node": "Split Schedule",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Scheduling Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Scheduling Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get Student Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Email or SMS?": {
+      "main": [
+        [
+          {
+            "node": "Prepare Email Reminders",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Prepare SMS Reminders",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Reminder Log": {
+      "main": [
+        [
+          {
+            "node": "Update Reminder Log",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has Classes Today?": {
+      "main": [
+        [
+          {
+            "node": "Read Student Contacts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Into Batches": {
+      "main": [
+        [
+          {
+            "node": "Email or SMS?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Class Schedule": {
+      "main": [
+        [
+          {
+            "node": "Filter Today's Classes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Reminder Log": {
+      "main": [
+        [
+          {
+            "node": "Save Reminder Log",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Daily Schedule Check": {
+      "main": [
+        [
+          {
+            "node": "Read Class Schedule",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare SMS Reminders": {
+      "main": [
+        [
+          {
+            "node": "Read Reminder Log",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Student Contacts": {
+      "main": [
+        [
+          {
+            "node": "Create Student Reminders",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter Today's Classes": {
+      "main": [
+        [
+          {
+            "node": "Has Classes Today?",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Sync to Google Calendar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Email Reminders": {
+      "main": [
+        [
+          {
+            "node": "Read Reminder Log",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sync to Google Calendar": {
+      "main": [
+        [
+          {
+            "node": "Create Student Reminders",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Student Reminders": {
+      "main": [
+        [
+          {
+            "node": "Split Into Batches",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Calendar AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Window Buffer Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Calendar AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "Calendar AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Calendar - Get Events": {
+      "ai_tool": [
+        [
+          {
+            "node": "Calendar AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Calendar - Create events": {
+      "ai_tool": [
+        [
+          {
+            "node": "Calendar AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set times": {
+      "main": [
+        [
+          {
+            "node": "Edit times",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "12 Hours from now": {
+      "main": [
+        [
+          {
+            "node": "Format - MMMM DD YY",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Query a document",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Query a document": {
+      "main": [
+        [
+          {
+            "node": "Respond to Chat",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "pinData": {},
+  "triggerCount": 0,
+  "meta": null
+}

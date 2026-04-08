@@ -1,0 +1,211 @@
+{
+  "name": "SHOPPPI",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "242a02b9-0ed2-474e-8c24-444a0dd61cbb",
+      "name": "Start Manual",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1216,
+        832
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://www.aliexpress.com/category/200000297/jewelry-accessories.html",
+        "responseFormat": "string",
+        "options": {}
+      },
+      "id": "1631e91c-f632-4577-9b83-68200a62fe0a",
+      "name": "Fetch AliExpress Products",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        -992,
+        832
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://api.salehoo.com/products/jewelry?limit=10",
+        "options": {}
+      },
+      "id": "311f69c5-109a-4394-98c0-028a070f39ce",
+      "name": "Fetch SaleHoo Products",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        -1216,
+        2848
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "const productsFromAli = $json[\"AliExpressProducts\"] || [];\nconst productsFromSaleHoo = $json[\"SaleHooProducts\"] || [];\nconst selectedProducts = productsFromAli.length > 0 ? productsFromAli.slice(0,5) : productsFromSaleHoo.slice(0,5);\nreturn selectedProducts.map(p => ({ json: { name: p.title || p.name, url: p.link, price: p.price, supplier: p.supplier || \"Unknown\" } }));"
+      },
+      "id": "a43cf308-eaf7-452f-b571-c5009eda3c6f",
+      "name": "Select Top 5 Products",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        -768,
+        832
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "const productName = $json[\"name\"];\nlet apiSource = \"Pexels\";\nlet url = `https://api.pexels.com/v1/search?query=${encodeURIComponent(productName + \" jewelry\")}&per_page=5`;\nif ($json[\"PexelsLimitReached\"]) {\n  apiSource = \"Unsplash\";\n  url = `https://api.unsplash.com/search/photos?query=${encodeURIComponent(productName + \" jewelry\")}&per_page=5&client_id=YOUR_UNSPLASH_KEY`;\n}\nreturn { json: { apiSource, url } };"
+      },
+      "id": "f69730cf-b52c-4753-aeab-797042b0c33b",
+      "name": "Image API Selector",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        -1216,
+        608
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "a10be4e6-060e-434c-8132-1c20381e635d",
+      "name": "Save Images Drive",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 1,
+      "position": [
+        -1216,
+        1056
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "return $json[\"HuggingFaceAvailable\"] ? { json: { model: \"HuggingFace-small\" } } : { json: { model: \"OpenAI-free-trial\" } };"
+      },
+      "id": "03f0c9c8-b480-45c4-ac2c-303327f5875e",
+      "name": "LLM Model Selector",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        -1216,
+        1280
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "return { json: { seo_title: $json.generated_title || $json.title || \"Untitled Jewelry\", seo_description: $json.generated_description || $json.description || \"Beautiful trendy jewelry product.\" } };"
+      },
+      "id": "3b4c397a-df25-4d58-8229-3e627e17ba74",
+      "name": "Parse LLM Output",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        -1216,
+        1504
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "createProduct"
+      },
+      "id": "ae0147ac-1de4-46d9-aef7-459571fb991b",
+      "name": "Shopify Add Product",
+      "type": "n8n-nodes-base.shopify",
+      "typeVersion": 1,
+      "position": [
+        -1216,
+        1728
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "if ($json[\"TidioAvailable\"]) { return { json: { engagement: \"Tidio\" } }; } else { return { json: { engagement: \"ShopifyEmail\" } }; }"
+      },
+      "id": "17828c35-5dbb-45c9-9e3f-96616e36a75a",
+      "name": "Engagement Selector",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        -1216,
+        1952
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "return { json: { name: $json.customer_name || \"Guest\", email: $json.customer_email || \"noemail@example.com\", phone: $json.customer_phone || \"\", product: $json.name, date: new Date().toISOString() } };"
+      },
+      "id": "6a024746-92f3-4385-9847-da2252c2e801",
+      "name": "Save Customer Info",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        -1216,
+        2176
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "sheetId": "YOUR_SHEET_ID",
+        "range": "Customers!A:E",
+        "options": {}
+      },
+      "id": "dca7fdc3-8e34-4cb0-8d70-bed4a8b91a99",
+      "name": "Save to Google Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 1,
+      "position": [
+        -1216,
+        2400
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "console.log(\"Workflow run completed at\", new Date().toISOString());\nreturn $input.all();"
+      },
+      "id": "be6361b2-b3d0-4f47-8279-f782d7255d42",
+      "name": "Quota Logger",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        -1216,
+        2624
+      ]
+    }
+  ],
+  "connections": {
+    "Start Manual": {
+      "main": [
+        [
+          {
+            "node": "Fetch AliExpress Products",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch AliExpress Products": {
+      "main": [
+        [
+          {
+            "node": "Select Top 5 Products",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "pinData": {},
+  "triggerCount": 0,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  }
+}

@@ -1,0 +1,87 @@
+{
+  "name": "My workflow 2",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "firebase",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -592,
+        736
+      ],
+      "id": "122c40ad-e30a-4bd3-9404-98c419752e14",
+      "name": "Webhook",
+      "webhookId": "1427225a-46f7-43f5-9b96-8aa2b226eaa8"
+    },
+    {
+      "parameters": {
+        "functionCode": "const timetable = items[0].json.timetable || [];\nconst teacherSlots = {};\nconst roomSlots = {};\nfor (let slot of timetable) {\n  const key = slot.day + '-' + slot.period;\n  if (!teacherSlots[slot.teacher]) teacherSlots[slot.teacher] = {};\n  if (!roomSlots[slot.room]) roomSlots[slot.room] = {};\n  if (teacherSlots[slot.teacher][key]) {\n    throw new Error('Teacher conflict: ' + slot.teacher);\n  }\n  if (roomSlots[slot.room][key]) {\n    throw new Error('Room conflict: ' + slot.room);\n  }\n  teacherSlots[slot.teacher][key] = true;\n  roomSlots[slot.room][key] = true;\n}\nreturn items;"
+      },
+      "id": "9404fa08-c338-4147-be00-2d8da4c0b3c6",
+      "name": "Conflict Checker",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        224,
+        848
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        0,
+        723
+      ],
+      "id": "9be5d54b-e622-4cc7-9d19-f7a4a5d09e7b",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -144,
+        944
+      ],
+      "id": "8e5aa38e-9e51-4068-8a76-51cb8e0bdb14",
+      "name": "Google Gemini Chat Model"
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        []
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "pinData": {},
+  "triggerCount": 1,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  }
+}

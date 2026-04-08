@@ -1,0 +1,542 @@
+{
+  "name": "ao.aaa",
+  "nodes": [
+    {
+      "parameters": {
+        "url": "={{ $json.images[0].url }}",
+        "options": {}
+      },
+      "id": "bacbfbc1-7ac7-4bc6-a0c2-a450390bc194",
+      "name": "Get File image",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        752,
+        232
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "url": "=https://queue.fal.run/fal-ai/nano-banana/requests/{{ $json.request_id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "id": "2e06b9f7-7408-4619-9fda-cfc3fd561618",
+      "name": "Get Url image",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        528,
+        232
+      ],
+      "typeVersion": 4.2,
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "jPXBKWDieIKtqdCI",
+          "name": "Header Auth account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "=https://queue.fal.run/fal-ai/nano-banana/requests/{{ $('Create Image').item.json.request_id }}/status ",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "id": "64ac6eba-6d67-4097-904b-e162856b5393",
+      "name": "Get status",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        80,
+        160
+      ],
+      "typeVersion": 4.2,
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "jPXBKWDieIKtqdCI",
+          "name": "Header Auth account 2"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "amount": 10
+      },
+      "id": "fdf13722-44f0-4514-8bbb-d2e41294f16b",
+      "name": "Wait 60 sec.",
+      "type": "n8n-nodes-base.wait",
+      "position": [
+        -144,
+        232
+      ],
+      "webhookId": "351bd496-a9cc-445c-86f6-a56189df0028",
+      "typeVersion": 1.1,
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "383d112e-2cc6-4dd4-8985-f09ce0bd1781",
+              "operator": {
+                "name": "filter.operator.equals",
+                "type": "string",
+                "operation": "equals"
+              },
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "COMPLETED"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "2640a740-37ca-4445-88b2-d65bb65ec179",
+      "name": "Completed?",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        304,
+        232
+      ],
+      "typeVersion": 2.2,
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "name": "={{ $now.format('yyyyLLddHHmmss') }}-{{ $json.images[0].file_name }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "1aHRwLWyrqfzoVC8HoB-YMrBvQ4tLC-NZ",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1aHRwLWyrqfzoVC8HoB-YMrBvQ4tLC-NZ",
+          "cachedResultName": "Fal.run"
+        },
+        "options": {}
+      },
+      "id": "15225551-78c0-49b8-bc58-b86ef1f70a81",
+      "name": "Upload Image",
+      "type": "n8n-nodes-base.googleDrive",
+      "position": [
+        976,
+        232
+      ],
+      "typeVersion": 3,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "Mm6OEcc92eNZQIIS",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "11ebWJvwwXHgvQld9kxywKQUvIoBw6xMa0g0BuIqHDxE",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/11ebWJvwwXHgvQld9kxywKQUvIoBw6xMa0g0BuIqHDxE/edit?usp=drivesdk",
+          "cachedResultName": "AI Virtual TryOn for WooCommerce"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gid=0",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/11ebWJvwwXHgvQld9kxywKQUvIoBw6xMa0g0BuIqHDxE/edit#gid=0",
+          "cachedResultName": "Foglio1"
+        },
+        "columns": {
+          "value": {
+            "row_number": "={{ $('Loop Over Items').item.json.row_number }}",
+            "IMAGE RESULT": "={{ $('Get File image').item.json.images[0].url }}"
+          },
+          "schema": [
+            {
+              "id": "IMAGE MODEL",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "IMAGE MODEL",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "IMAGE PRODUCT",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "IMAGE PRODUCT",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "PRODUCT ID",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "PRODUCT ID",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "IMAGE RESULT",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "IMAGE RESULT",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": true,
+              "required": false,
+              "displayName": "row_number",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": [
+            "row_number"
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "048f555e-e9e8-4a25-83f1-a0e5237879d4",
+      "name": "Update result",
+      "type": "n8n-nodes-base.googleSheets",
+      "position": [
+        1200,
+        452
+      ],
+      "typeVersion": 4.5,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ht7YbtWnyRqrJXBY",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c713d31f-9abd-496a-ac79-e8e2efe60aa0",
+              "name": "model",
+              "type": "string",
+              "value": "={{ $json['IMAGE MODEL'] }}"
+            },
+            {
+              "id": "58fb5e76-6576-4d16-8b25-b931c7935c01",
+              "name": "shirt",
+              "type": "string",
+              "value": "={{ $json['IMAGE PRODUCT'] }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "79e32b7a-9f3a-4a1d-ae3d-7ef222ef5344",
+      "name": "Set data",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        -720,
+        328
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "504dbae9-25b9-4fb4-8aee-e52795ada8d0",
+      "name": "Loop Over Items",
+      "type": "n8n-nodes-base.splitInBatches",
+      "position": [
+        -944,
+        452
+      ],
+      "typeVersion": 3
+    },
+    {
+      "parameters": {
+        "content": "## STEP 1 - GOOGLE SHEET\nCreate a [Google Sheet like this](https://docs.google.com/spreadsheets/d/11ebWJvwwXHgvQld9kxywKQUvIoBw6xMa0g0BuIqHDxE/edit?usp=sharing).\n\nPlease insert:\n- in the \"IMAGE MODEL\" column the basic image of the model to dress\n- in the \"IMAGE PRODUCT\" column the image of the item of clothing to wear\n- in the \"PRODUCT ID\" column the ID of the product on your crm\n\nLeave the \"IMAGE RESULT\" column unfilled. It will be inserted by the system once the image has been created",
+        "height": 260,
+        "width": 740
+      },
+      "id": "6e9adf30-3383-4f9f-95f6-33cbb66dc333",
+      "name": "Sticky Note4",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -754,
+        932
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={\n     \"prompt\": \"make a photo of the model wearing the submitted shoes item and creating the themed background\",\n     \"image_urls\": [\n       \"{{ $json.model }}\",\n       \"{{ $json.shirt }}\"\n     ]\n   }",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        -496,
+        328
+      ],
+      "id": "3c8e0094-3a09-42ff-bc08-931321a6fbde",
+      "name": "AI Agent",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "model": "google/gemini-2.5-flash-image-preview",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        -424,
+        552
+      ],
+      "id": "eaa13d05-6ce1-4ae1-ac05-58161913334c",
+      "name": "OpenRouter Chat Model",
+      "credentials": {
+        "openRouterApi": {
+          "id": "teSUbcA6uNeuHkt2",
+          "name": "OpenRouter account"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "formTitle": "iamge",
+        "formDescription": "prompt",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "product",
+              "fieldType": "file"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.3,
+      "position": [
+        -1168,
+        452
+      ],
+      "id": "e3eb7d60-a12c-48b0-a6de-b32456b5b931",
+      "name": "On form submission",
+      "webhookId": "a84c85ec-8457-4701-af4f-5d7622d70b41"
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash-image-preview",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash-image-preview (Nano Banana)"
+        },
+        "prompt": "={\n     \"prompt\": \"make a photo of the model wearing the submitted shoes item and creating the themed background\",\n     \"image_urls\": [\n       \"{{ $json.model }}\",\n       \"{{ $json.shoe }}\"\n     ]\n   }",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        -144,
+        424
+      ],
+      "id": "3c65aedf-dd7e-4107-bb6a-3a308d5227e5",
+      "name": "Generate an image",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "2adWgmMSgbuJMaZn",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Set data": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Completed?": {
+      "main": [
+        [
+          {
+            "node": "Get Url image",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait 60 sec.",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get status": {
+      "main": [
+        [
+          {
+            "node": "Completed?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload Image": {
+      "main": [
+        [
+          {
+            "node": "Update result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait 60 sec.": {
+      "main": [
+        [
+          {
+            "node": "Get status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Url image": {
+      "main": [
+        [
+          {
+            "node": "Get File image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update result": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get File image": {
+      "main": [
+        [
+          {
+            "node": "Upload Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Set data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Wait 60 sec.",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Generate an image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "pinData": {},
+  "triggerCount": 0,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  }
+}

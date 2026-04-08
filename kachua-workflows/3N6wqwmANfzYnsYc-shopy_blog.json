@@ -1,0 +1,602 @@
+{
+  "name": "shopy blog",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "5d0f4a81-2d71-4f38-88bd-709ff35611b9",
+      "name": "When clicking ‘Test workflow’",
+      "type": "n8n-nodes-base.manualTrigger",
+      "position": [
+        -1168,
+        400
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "authentication": "accessToken",
+        "resource": "product",
+        "operation": "getAll",
+        "returnAll": true,
+        "additionalFields": {}
+      },
+      "id": "2fd5fcb9-2495-47b1-9795-1db84f12ddab",
+      "name": "Shopify",
+      "type": "n8n-nodes-base.shopify",
+      "position": [
+        -944,
+        400
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "images",
+        "options": {}
+      },
+      "id": "a788e359-d527-4ffb-9cc5-1d15499b0b59",
+      "name": "Split Out",
+      "type": "n8n-nodes-base.splitOut",
+      "position": [
+        -720,
+        400
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "operation": "analyze",
+        "modelId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "chatgpt-4o-latest",
+          "cachedResultName": "CHATGPT-4O-LATEST"
+        },
+        "text": "=You are an expert OCR and nutrition facts extractor. You carefully extract only the exact nutritional data present in the image without fabricating or guessing. You can recognize nutritional facts tables, and you know how to distinguish between actual nutrition data and promotional or partial text. You return null if no clear nutrition facts table or readable nutritional information is present.\n\n\nYou will analyze an image containing a product's nutritional information. Extract all nutritional data exactly as shown in the image, including nutrient names, amounts, units, and daily values if present.\n\n- If the image clearly contains a nutritional facts table or full nutritional data, output it in clean JSON format, where each nutrient is a key and the value contains the amount, unit, and daily value if available.\n- If the image shows only partial, blurry, or promotional text like \"20% protein\" or any incomplete nutritional data, do NOT fabricate any values; instead, return null.\n- If there is no clear nutritional facts table or nutritional data visible in the image, return null.\n- Do not guess or invent any numbers.\n- Only include information that is confidently present and readable in the image.\n\nExample output when nutrition facts are present:\n\n{\n  \"Calories\": \"190\",\n  \"Total Fat\": {\n    \"amount\": \"8g\",\n    \"daily_value\": \"10%\"\n  },\n  \"Cholesterol\": {\n    \"amount\": \"0mg\",\n    \"daily_value\": \"0%\"\n  },\n  ...\n}\n\nExample output when no valid nutritional facts table or data is visible:\n\nnull\n",
+        "imageUrls": "={{ $json.src }}",
+        "options": {
+          "detail": "auto",
+          "maxTokens": 900
+        }
+      },
+      "id": "f9e10cd9-dcf6-40a8-bbbe-259a09b22ced",
+      "name": "OpenAI",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "position": [
+        -496,
+        400
+      ],
+      "typeVersion": 1.8
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "id": "568b67eb-9f83-4ee5-ba30-fc142c485d91",
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        176,
+        528
+      ],
+      "typeVersion": 1.2
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "6aa4dfe1-d907-47e8-b97e-3a77bb30c1d0",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              },
+              "leftValue": "={{ $json.content }}",
+              "rightValue": "null"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "2c918a08-3426-43a1-a8a4-1fceb3e8245b",
+      "name": "If",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        -272,
+        400
+      ],
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {},
+      "id": "55313b65-0c76-429c-85a9-f139e36f88cc",
+      "name": "No Operation, do nothing",
+      "type": "n8n-nodes-base.noOp",
+      "position": [
+        -48,
+        496
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://smartworkflow.myshopify.com/admin/api/2024-01/blogs.json",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "shopifyAccessTokenApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('JSON', ``, 'json') }}",
+        "options": {}
+      },
+      "id": "c0b4f281-56af-486e-b57e-defc4decbeaf",
+      "name": "Create Blog id",
+      "type": "n8n-nodes-base.httpRequestTool",
+      "position": [
+        688,
+        528
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('URL', ``, 'string') }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "shopifyAccessTokenApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('JSON', ``, 'json') }}",
+        "options": {}
+      },
+      "id": "7d9b0e0e-e964-4597-a532-8aa97c4b4dd8",
+      "name": "Create Articles",
+      "type": "n8n-nodes-base.httpRequestTool",
+      "position": [
+        816,
+        528
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "1m4yPuz7d0HYJQ1nC-v_oTN5jmYMoDy38beDGLB273B8",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1m4yPuz7d0HYJQ1nC-v_oTN5jmYMoDy38beDGLB273B8/edit?usp=drivesdk",
+          "cachedResultName": "Blog update sheet"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gid=0",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1m4yPuz7d0HYJQ1nC-v_oTN5jmYMoDy38beDGLB273B8/edit#gid=0",
+          "cachedResultName": "blog_details"
+        },
+        "options": {}
+      },
+      "id": "66c86573-401e-400a-a46f-fb335d9e7a2a",
+      "name": "Read Sheet",
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "position": [
+        432,
+        528
+      ],
+      "typeVersion": 4.5
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "1m4yPuz7d0HYJQ1nC-v_oTN5jmYMoDy38beDGLB273B8",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1m4yPuz7d0HYJQ1nC-v_oTN5jmYMoDy38beDGLB273B8/edit?usp=drivesdk",
+          "cachedResultName": "Blog update sheet"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gid=0",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1m4yPuz7d0HYJQ1nC-v_oTN5jmYMoDy38beDGLB273B8/edit#gid=0",
+          "cachedResultName": "blog_details"
+        },
+        "columns": {
+          "value": {
+            "Error": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Error', ``, 'string') }}",
+            "Retry": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Retry', ``, 'string') }}",
+            "Blog url": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Blog_url', ``, 'string') }}",
+            "Blog Html": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Blog_Html', ``, 'string') }}",
+            "Timestamp": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Timestamp', ``, 'string') }}",
+            "Product Id": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Product_Id', ``, 'string') }}",
+            "Blog title ": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Blog_title_', ``, 'string') }}",
+            "Proudct name": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Proudct_name', ``, 'string') }}"
+          },
+          "schema": [
+            {
+              "id": "Timestamp",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "Timestamp",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Product Id",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "Product Id",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Proudct name",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "Proudct name",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Blog title ",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "Blog title ",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Blog url",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "Blog url",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Blog Html",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "Blog Html",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Retry",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "Retry",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Error",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "Error",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": [
+            "Product Id"
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "a839d542-4052-4626-be91-b797f23c6e1e",
+      "name": "Update Sheet",
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "position": [
+        560,
+        528
+      ],
+      "typeVersion": 4.5
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Main Product info').item.json.id }}",
+        "contextWindowLength": 20
+      },
+      "id": "eae2bb7a-444c-454e-8877-725c46b7e2a1",
+      "name": "Simple Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "position": [
+        304,
+        528
+      ],
+      "typeVersion": 1.3
+    },
+    {
+      "parameters": {
+        "content": "## Get Products \n\n\nIt get all the product details from the shopify store",
+        "height": 360,
+        "width": 260
+      },
+      "id": "0bb3870f-b2d5-47d1-88f8-05bc9796b2f6",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1040,
+        112
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## Fetches Product Image url \n\nEach Product can have multiple images it fetches image url for further step.",
+        "height": 500,
+        "color": 3
+      },
+      "id": "0fe28285-0afc-4d17-84c3-64c473ff887e",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -800,
+        64
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## OCR :\nCollects Nutrients Facts \n\n* It collects Nutrients information from the product image and outputs in json format and send along the true branch of the if node.\n\n* If the image doesn't contain any related info it returns null.",
+        "height": 500,
+        "width": 380,
+        "color": 6
+      },
+      "id": "097466e5-bc9d-4a9a-993b-080b33c086b7",
+      "name": "Sticky Note2",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -528,
+        64
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "93cb8cc0-cdcd-44da-8187-9df85b770293",
+              "name": "title",
+              "type": "string",
+              "value": "={{ $('Shopify').item.json.title }}"
+            },
+            {
+              "id": "95990abc-b64d-4cb4-8d4e-88145395a3fc",
+              "name": "id",
+              "type": "number",
+              "value": "={{ $('Shopify').item.json.id }}"
+            },
+            {
+              "id": "d833cfa1-9abf-4a9d-86ed-a713acbc1974",
+              "name": "body_html",
+              "type": "string",
+              "value": "={{ $('Shopify').item.json.body_html }}"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "8fba89b2-95ce-4778-aa7e-1caa5bec6ee6",
+      "name": "Main Product info",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        -48,
+        304
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "content": "## Shopify Products Blog Mechanism:\n\n\n* It creates Seo Freindly Blog and Blog Title and post the content or article after creating blog of a       \n   specific category which can be seen on the Shopify blog section inside the store via http calls.\n\n* It first checks whether the product is already available or not in the sheet then checks whether      \n   there is need to retry the posting if there is any error. If there is error it retries posting it \n   change the retry value as no.\n* It takes two http tool call to make a blog one is Blog id creation and other is article posting via \n  Create Articles inside that particular Id.\n* Once the blog is posted all the details are updated via Update Sheet tool. If there is any error it updates it accordingly with the error message in error column",
+        "height": 460,
+        "width": 920,
+        "color": 4
+      },
+      "id": "16cee478-2030-4858-90ad-06cc00a5cfc5",
+      "name": "Sticky Note3",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -160,
+        16
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Product id : {{ $json.id }}\nProduct title : {{ $json.title }}    \n\nProduct Description html : {{ $json.body_html }}\n\nProduct Nutrition Facts : {{ $json.content }}\n\n",
+        "options": {
+          "systemMessage": "=You are an AI agent responsible for automating blog creation for Shopify products using Google Sheets as a tracking system.\n\n## Step-by-step Workflow:\n\n### 1. Read Google Sheet\nBefore doing anything, call the Read Sheet tool to check if a blog has already been created for the Product ID. The sheet contains columns:\n\n- Timestamp\n- Product Id\n- Product name\n- Blog title\n- Blog url\n- Blog Html\n- Retry\n- Error\n\nCall this tool first and look up the row with the same Product Id.\n\n### 2. Check Conditions:\n- If the Product Id exists and Retry = No, skip this item.\n- If Retry = Yes, retry blog creation from Step 3.\n- If the Product Id is not found, proceed to Step 3 to generate and post a new blog.\n\n---\n\n### 3. Generate Blog Content\nBased on the following provided in the user message:\n- Product ID\n- Product Title\n- Product Description HTML\n- Product Nutrition Facts \n\nGenerate:\n- SEO-Friendly Blog Title\n- Meta Description\n- Formatted Blog Content in clean, structured HTML:\n  - Introduction summary\n  - H2/H3 subheadings\n  - Bullet points (key benefits, nutrients)\n  - Nutrient callouts or tables (if available)\n  - Closing paragraph or CTA\n  - Add internal keywords (tags)\n\n---\n\n### 4. Create Blog (HTTP Tool Call)\nCall the Shopify API to create a blog:\n\njson\n{\n  \"tool_call\": {\n    \"tool\": \"http\",\n    \"name\": \"Create Blog\",\n    \"method\": \"POST\",\n    \"url\": \"https://smartworkflow.myshopify.com/admin/api/2024-01/blogs.json\",\n    \"body\": {\n      \"blog\": {\n        \"title\": \"[SEO Blog Title]\"\n      }\n    }\n  }\n}\nOnce the blog.id is returned, post the article to:\n\n\nhttps://smartworkflow.myshopify.com/admin/api/2024-01/blogs/{{blog.id}}/articles.json\njson\nCopy\nEdit\n{\n  \"tool_call\": {\n    \"tool\": \"http\",\n    \"name\": \"Create Article\",\n    \"method\": \"POST\",\n    \"url\": \"https://smartworkflow.myshopify.com/admin/api/2024-01/blogs/{{blog.id}}/articles.json\",\n    \"body\": {\n      \"article\": {\n        \"title\": \"[Same Blog Title]\",\n        \"body_html\": \"[Generated HTML content]\",\n        \"tags\": \"nutrition, wellness, product, shopify\",\n        \"published\": false\n      }\n    }\n  }\n}\n6. Update Google Sheet\nIf Blog is Posted Successfully\nCall Update Sheet tool and set:\n\n\n{\n  \"Timestamp\":{{ $now }} ,\n  \"Product Id\": \"{{ $json.id }}\",\n  \"Product name\": \"{{ $json.title }}\",\n  \"Blog title\": \"[SEO Blog Title]\",\n  \"Blog url\": \"[Generated URL from blog.id and article.id]\",\n  \"Blog Html\": \"[Generated HTML]\",\n  \"Retry\": \"No\",\n  \"Error\": \"\"\n}\nIf Blog or Article Fails\nLog the error in Error column and set Retry = Yes.\n\n\n{\n  \"Product Id\": \"{{ $json.id }}\",\n  \"Retry\": \"Yes\",\n  \"Error\": \"[Detailed error message]\"\n}\n\nNotes:\nAlways call Read Sheet first before blog generation.\n\nRetry logic is based strictly on the Retry column.\n\nAll tool call responses should be handled using proper try-catch/error-check patterns.\n\nEnsure HTML is clean and includes correct spacing, paragraphs, H2s, bullet lists, and optionally nutrient tables.\n"
+        }
+      },
+      "id": "92ac0097-3c2e-4af9-9341-dcc2e78e8834",
+      "name": "AI Blog Poster",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        432,
+        304
+      ],
+      "typeVersion": 1.9
+    }
+  ],
+  "connections": {
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Main Product info",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Shopify": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "OpenAI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Sheet": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Blog Poster",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Sheet": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Blog Poster",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Blog Poster",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Blog id": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Blog Poster",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Articles": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Blog Poster",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Main Product info": {
+      "main": [
+        [
+          {
+            "node": "AI Blog Poster",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Blog Poster",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "Shopify",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "pinData": {},
+  "triggerCount": 0,
+  "meta": null
+}

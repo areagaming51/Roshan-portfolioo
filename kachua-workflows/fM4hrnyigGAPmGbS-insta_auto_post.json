@@ -1,0 +1,1144 @@
+{
+  "name": "insta auto post",
+  "nodes": [
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "queryString": "=",
+        "filter": {
+          "driveId": {
+            "mode": "list",
+            "value": "My Drive"
+          },
+          "folderId": {
+            "__rl": true,
+            "value": "1l9hrCvCFe3yU7GZusnY9ulfGFpoL-kbP",
+            "mode": "list",
+            "cachedResultName": "output",
+            "cachedResultUrl": "https://drive.google.com/drive/folders/1l9hrCvCFe3yU7GZusnY9ulfGFpoL-kbP"
+          }
+        },
+        "options": {}
+      },
+      "id": "f1f17917-70b9-4670-b993-cd9bdac2fc10",
+      "name": "Get image list from a Google Drive folder1",
+      "type": "n8n-nodes-base.googleDrive",
+      "position": [
+        48,
+        -608
+      ],
+      "typeVersion": 3,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "Mm6OEcc92eNZQIIS",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "spreadsheet",
+        "options": {}
+      },
+      "id": "89c1ce9e-b6d5-46bf-b368-4840671c9704",
+      "name": "Get Execution for Carousel",
+      "type": "n8n-nodes-base.googleSheets",
+      "position": [
+        272,
+        -384
+      ],
+      "typeVersion": 4.6,
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 5,
+              "triggerAtMinute": 2
+            }
+          ]
+        }
+      },
+      "id": "a6cde59b-632d-4308-a279-8dde1c215494",
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "position": [
+        48,
+        -384
+      ],
+      "typeVersion": 1.2
+    },
+    {
+      "parameters": {
+        "content": "After creating account and folder on Cloudinary, make sure to update the following:\n<your-cloud-name>\n<your_upload_preset>\nto match your settings\n",
+        "height": 354,
+        "width": 304
+      },
+      "id": "f6b86ce4-fc01-455e-9fef-1dfeaddc8b83",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        392,
+        -578
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "The Google Drive folder needs to be shared publicly (Anyone with the link can view)",
+        "height": 354,
+        "width": 284
+      },
+      "id": "39333879-3aa2-41c3-b3e0-91a41c815121",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -46,
+        -802
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "Update your instagram information below\n<your-instagram-access-token>\n<your-ig_user_id>",
+        "height": 354,
+        "width": 304
+      },
+      "id": "1167951f-8080-48aa-88e4-bcb358300f6c",
+      "name": "Sticky Note2",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        616,
+        -578
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.cloudinary.com/v1_1/<your-cloud-name>/image/upload",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "parameterType": "formBinaryData",
+              "name": "file",
+              "inputDataFieldName": "data"
+            },
+            {
+              "name": "upload_preset",
+              "value": "<your_upload_preset>"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "id": "8734713c-1878-4812-a31a-bf58938e689b",
+      "name": "Upload images to Cloudinary",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        272,
+        -160
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5b2dad43-2ec9-4bc0-8427-c9bab6a5fc2c",
+              "name": "access_token",
+              "type": "string",
+              "value": "<your-instagram-access-token>"
+            },
+            {
+              "id": "55b08009-fd62-44b8-b21e-6dde6aa9594f",
+              "name": "ig_user_id",
+              "type": "string",
+              "value": "<your-ig_user_id>"
+            },
+            {
+              "id": "53127a63-5583-4a5b-84bf-d2efd439af2b",
+              "name": "image_url",
+              "type": "string",
+              "value": "={{ $json.url }}"
+            },
+            {
+              "id": "90a680ca-49c2-4b83-bbf4-45614e882c01",
+              "name": "caption",
+              "type": "string",
+              "value": "={{ $('Get Execution for Carousel').item.json['Expected content'] }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "7aae8606-dd02-4ccb-873f-d42e3c223041",
+      "name": "Setup for Instagram (access token, ig_business_id)",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        496,
+        -160
+      ],
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "url": "=https://drive.google.com/uc?export=download&id={{ $json.id }}",
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "id": "87c3457b-7648-4c4f-8ec5-ac2ec3d2e5f6",
+      "name": "Download Image from Google Drive (Carousel)",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        48,
+        -160
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.instagram.com/v23.0/{{ $json.ig_user_id }}/media",
+        "sendBody": true,
+        "contentType": "form-urlencoded",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "image_url",
+              "value": "={{ $json.image_url }}"
+            },
+            {
+              "name": "caption",
+              "value": "={{ $json.caption }}"
+            },
+            {
+              "name": "access_token",
+              "value": "={{ $json.access_token }}"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true
+            }
+          }
+        }
+      },
+      "id": "b7cbfa22-6ae6-40c6-90b6-dfafa0710dd7",
+      "name": "Create Media Container (Image)",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        720,
+        -160
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "fieldsToAggregate": {
+          "fieldToAggregate": [
+            {
+              "fieldToAggregate": "body.id"
+            }
+          ]
+        },
+        "options": {
+          "mergeLists": true
+        }
+      },
+      "id": "2aa5e48c-9f4c-4d3c-b393-19b72b6d5eed",
+      "name": "Combine Instagram media containers",
+      "type": "n8n-nodes-base.aggregate",
+      "position": [
+        944,
+        -160
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.instagram.com/v23.0/{{ $('Setup for Instagram (access token, ig_business_id)').first().json.ig_user_id }}/media",
+        "sendBody": true,
+        "contentType": "form-urlencoded",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "caption",
+              "value": "={{ $('Get Execution for Carousel').item.json['Expected content'] }}"
+            },
+            {
+              "name": "media_type",
+              "value": "=CAROUSEL"
+            },
+            {
+              "name": "children",
+              "value": "={{ $json.id }}"
+            },
+            {
+              "name": "access_token",
+              "value": "={{ $('Setup for Instagram (access token, ig_business_id)').first().json.access_token }}"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true
+            }
+          }
+        }
+      },
+      "id": "87861027-009f-47ca-ab8d-d4ef4149d1a1",
+      "name": "Create Media Container (Carousel)",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        1168,
+        -160
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://graph.instagram.com/v23.0/{{ $('Setup for Instagram (access token, ig_business_id)').first().json.ig_user_id }}/media_publish",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "creation_id",
+              "value": "={{ $json.body.id }}"
+            },
+            {
+              "name": "access_token",
+              "value": "={{ $('Setup for Instagram (access token, ig_business_id)').first().json.access_token }}"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          }
+        }
+      },
+      "id": "4b585f19-4301-425f-9aad-8b1322e08d92",
+      "name": "Publish Instagram Carousel",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        1392,
+        -160
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "1WEUHeQXFMYsWVAW3DykWwpANxxD3DxH-S6c0i06dW1g",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1WEUHeQXFMYsWVAW3DykWwpANxxD3DxH-S6c0i06dW1g/edit?usp=drivesdk",
+          "cachedResultName": "0004_Master"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "list",
+          "value": 1315784118,
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1WEUHeQXFMYsWVAW3DykWwpANxxD3DxH-S6c0i06dW1g/edit#gid=1315784118",
+          "cachedResultName": "Execute "
+        },
+        "columns": {
+          "value": {
+            "Status": "Processed",
+            "ExecuteId": "={{ $('Get Execution for Carousel').item.json.ExecuteId }}"
+          },
+          "schema": [
+            {
+              "id": "ExecuteId",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "ExecuteId",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Folder",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "required": false,
+              "displayName": "Folder",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Expected content",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "required": false,
+              "displayName": "Expected content",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Language",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "required": false,
+              "displayName": "Language",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Status",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "Status",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Type",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "required": false,
+              "displayName": "Type",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Schedule_at",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "Schedule_at",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": true,
+              "required": false,
+              "displayName": "row_number",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": [
+            "ExecuteId"
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "45201054-4352-4543-bf10-3bcbcdfc30e3",
+      "name": "Update Execute to \"Processed\"",
+      "type": "n8n-nodes-base.googleSheets",
+      "position": [
+        1616,
+        -160
+      ],
+      "typeVersion": 4.6,
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "operation": "list",
+        "options": {}
+      },
+      "id": "5592441a-34c0-4ba9-9d68-943590a82e45",
+      "name": "List Files (Output Folder)",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 2,
+      "position": [
+        496,
+        -384
+      ],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "Mm6OEcc92eNZQIIS",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Loop over input items and add a new field called 'myNewField' to the JSON of each one\nfor (const item of $input.all()) {\n  item.json.myNewField = 1;\n}\n\nreturn $input.all();"
+      },
+      "id": "a1b9eb6d-3b8e-4c2e-be45-bc8f51af95b2",
+      "name": "Pick File (Random)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        720,
+        -384
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": "={{$json[\"id\"]}}",
+        "options": {}
+      },
+      "id": "bc887a1f-2a29-4a91-8938-2f8441aaae46",
+      "name": "Download File",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 2,
+      "position": [
+        944,
+        -384
+      ],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "Mm6OEcc92eNZQIIS",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "fileId": "={{$json[\"id\"]}}"
+      },
+      "id": "2838179d-728b-4e4b-b1c3-d39e92e6ae05",
+      "name": "Delete File",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 2,
+      "position": [
+        1392,
+        -384
+      ],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "Mm6OEcc92eNZQIIS",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "return items.map(item => {\n  // Example processing step\n  console.log('Processing:', item.binary.data.fileName);\n  return item;\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1168,
+        -384
+      ],
+      "id": "2a719260-efec-4c83-9b14-dfc4905c6c3c",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "analyze-product",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "853b7cef-a2ca-4002-88be-87b75113388c",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        -192,
+        -992
+      ],
+      "webhookId": "75493b6d-6e12-4b63-82d2-299d241519e3"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extract images from different trigger sources\nlet images = [];\nlet source = 'unknown';\nlet responseChannel = null;\n\n// Check if triggered by Discord webhook\nif ($input.item.json.attachments && $input.item.json.attachments.length > 0) {\n  source = 'discord_webhook';\n  responseChannel = $input.item.json.channel_id;\n  \n  // Extract image URLs from Discord attachments\n  $input.item.json.attachments.forEach((attachment, index) => {\n    if (attachment.content_type && attachment.content_type.startsWith('image/')) {\n      images.push({\n        url: attachment.url,\n        filename: attachment.filename || `image_${index + 1}.${attachment.content_type.split('/')[1]}`,\n        index: index\n      });\n    }\n  });\n}\n// Check if triggered by regular webhook with image URLs\nelse if ($input.item.json.image_urls && Array.isArray($input.item.json.image_urls)) {\n  source = 'webhook_array';\n  \n  $input.item.json.image_urls.forEach((url, index) => {\n    images.push({\n      url: url,\n      filename: `product_image_${index + 1}.jpg`,\n      index: index\n    });\n  });\n}\n// Check if single image URL provided\nelse if ($input.item.json.image_url) {\n  source = 'webhook_single';\n  \n  images.push({\n    url: $input.item.json.image_url,\n    filename: 'product_image_1.jpg',\n    index: 0\n  });\n}\n\n// Return array of items for processing\nif (images.length === 0) {\n  return [{\n    json: {\n      error: 'No images found',\n      message: 'Please provide images via Discord attachments or image_url/image_urls parameters'\n    }\n  }];\n}\n\nreturn images.map(image => ({\n  json: {\n    ...image,\n    source: source,\n    responseChannel: responseChannel,\n    totalImages: images.length,\n    originalInput: $input.item.json\n  }\n}));"
+      },
+      "id": "170af1b3-4ba7-484a-b941-d41d0ed0de5a",
+      "name": "Extract Images from Input",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        112,
+        -1008
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "leftValue": "={{$json.error}}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "isEmpty"
+              },
+              "id": "34c80c00-04c2-46cd-ad98-f23e96bd2118"
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "cc4a43de-43ed-4171-837c-b00c19d8d9e3",
+      "name": "Validate Images Found",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        304,
+        -1008
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{$json.url}}",
+        "options": {}
+      },
+      "id": "a057b8cb-9dd4-47ae-bd93-74196b770408",
+      "name": "Download Product Images",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        496,
+        -1056
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "chat",
+        "operation": "message",
+        "requestOptions": {}
+      },
+      "id": "2166b18e-e251-44fc-9809-7da262591d8a",
+      "name": "Analyze Each Product Image",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1,
+      "position": [
+        688,
+        -1056
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "p1yFGSZIoqj09vUK",
+          "name": "n8n free OpenAI API credits"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "chat",
+        "operation": "message",
+        "requestOptions": {}
+      },
+      "id": "27a35fb7-2b39-4291-bd29-3d77df909334",
+      "name": "Generate SEO Content",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1,
+      "position": [
+        896,
+        -1056
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "chat",
+        "operation": "message",
+        "requestOptions": {}
+      },
+      "id": "8782b1b3-0821-4612-81c9-111347b4d4c4",
+      "name": "Generate Ad Image Prompts",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1,
+      "position": [
+        896,
+        -896
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse the JSON responses and structure the output for each image\nconst imageData = $input.item.json;\nconst imageAnalysis = $('Analyze Each Product Image').item.json.choices[0].message.content;\nconst seoContentRaw = $('Generate SEO Content').item.json.choices[0].message.content;\nconst adPromptsRaw = $('Generate Ad Image Prompts').item.json.choices[0].message.content;\n\nlet seoContent, adPrompts;\n\ntry {\n  seoContent = JSON.parse(seoContentRaw);\n} catch (e) {\n  seoContent = { error: 'Failed to parse SEO content', raw: seoContentRaw };\n}\n\ntry {\n  adPrompts = JSON.parse(adPromptsRaw);\n} catch (e) {\n  adPrompts = { error: 'Failed to parse ad prompts', raw: adPromptsRaw };\n}\n\nconst result = {\n  image_info: {\n    index: imageData.index + 1,\n    total_images: imageData.totalImages,\n    filename: imageData.filename,\n    original_url: imageData.url,\n    source: imageData.source\n  },\n  timestamp: new Date().toISOString(),\n  analysis: {\n    product_analysis: imageAnalysis\n  },\n  seo_content: {\n    titles: seoContent.titles || [],\n    meta_description: seoContent.meta_description || '',\n    seo_tags: seoContent.seo_tags || [],\n    product_description: seoContent.product_description || '',\n    call_to_action: seoContent.call_to_action || ''\n  },\n  ad_prompts: {\n    lifestyle: adPrompts.lifestyle_prompt || '',\n    minimalist: adPrompts.minimalist_prompt || '',\n    dynamic: adPrompts.dynamic_prompt || '',\n    luxury: adPrompts.luxury_prompt || ''\n  }\n};\n\nreturn result;"
+      },
+      "id": "27904b45-5a7b-44eb-ab98-0ac632dc657b",
+      "name": "Format Individual Results",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1088,
+        -976
+      ]
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "destinationFieldName": "all_results",
+        "options": {}
+      },
+      "id": "4041d364-994d-46c8-88c2-a95c7d2c3c08",
+      "name": "Aggregate All Results",
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        1296,
+        -976
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Create comprehensive report for all processed images\nconst allResults = $json.all_results;\nconst firstResult = allResults[0];\n\n// Create summary document content\nconst reportContent = `# Product Analysis Report\\n**Generated:** ${new Date().toISOString()}\\n**Total Images Processed:** ${allResults.length}\\n**Source:** ${firstResult.image_info.source}\\n\\n---\\n\\n${allResults.map((result, index) => {\n  return `## Image ${result.image_info.index}: ${result.image_info.filename}\\n\\n### Product Analysis\\n${result.analysis.product_analysis}\\n\\n### SEO Content\\n**Top Title:** ${result.seo_content.titles[0] || 'N/A'}\\n**Meta Description:** ${result.seo_content.meta_description}\\n**SEO Tags:** ${result.seo_content.seo_tags.join(', ')}\\n**Call to Action:** ${result.seo_content.call_to_action}\\n\\n**Product Description:**\\n${result.seo_content.product_description}\\n\\n### Advertisement Prompts\\n\\n**Lifestyle Ad Prompt:**\\n${result.ad_prompts.lifestyle}\\n\\n**Minimalist Ad Prompt:**\\n${result.ad_prompts.minimalist}\\n\\n**Dynamic Ad Prompt:**\\n${result.ad_prompts.dynamic}\\n\\n**Luxury Ad Prompt:**\\n${result.ad_prompts.luxury}\\n\\n---\\n`;\n}).join('\\n')}\\n\\n## Summary\\nThis report contains SEO-optimized content and advertisement prompts for ${allResults.length} product image${allResults.length > 1 ? 's' : ''}. Use the generated titles and descriptions for your e-commerce listings, and the ad prompts with AI image generators like DALL-E, Midjourney, or Stable Diffusion.\\n`;\n\nconst jsonData = {\n  report_metadata: {\n    timestamp: new Date().toISOString(),\n    total_images: allResults.length,\n    source: firstResult.image_info.source,\n    processing_summary: {\n      images_processed: allResults.length,\n      seo_titles_generated: allResults.length * 3,\n      ad_prompts_generated: allResults.length * 4,\n      total_seo_tags: allResults.reduce((sum, r) => sum + (r.seo_content.seo_tags?.length || 0), 0)\n    }\n  },\n  results: allResults\n};\n\nreturn {\n  json: jsonData,\n  binary: {\n    data: Buffer.from(reportContent).toString('base64'),\n    mimeType: 'text/markdown',\n    fileName: `product_analysis_report_${new Date().toISOString().split('T')[0]}_${allResults.length}images.md`\n  }\n};"
+      },
+      "id": "22ccebc9-2282-417b-a135-3f1a4cd8e469",
+      "name": "Create Comprehensive Report",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1408,
+        -1040
+      ]
+    },
+    {
+      "parameters": {
+        "name": "={{$binary.fileName}}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": "YOUR_GOOGLE_DRIVE_FOLDER_ID",
+        "options": {}
+      },
+      "id": "eeb3d63b-832e-496c-9f71-cc5e604536a5",
+      "name": "Upload Report to Google Drive",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1600,
+        -1072
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Create individual JSON files for each image result\nconst allResults = $('Create Comprehensive Report').item.json.results;\n\nreturn allResults.map(result => ({\n  json: result,\n  binary: {\n    data: Buffer.from(JSON.stringify(result, null, 2)).toString('base64'),\n    mimeType: 'application/json',\n    fileName: `product_${result.image_info.index}_${result.image_info.filename.replace(/\\.[^/.]+$/, '')}_analysis.json`\n  }\n}));"
+      },
+      "id": "8c7ecf15-675d-4014-b97f-09a61e00d7d1",
+      "name": "Create Individual JSON Files",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1616,
+        -832
+      ]
+    },
+    {
+      "parameters": {
+        "name": "={{$binary.fileName}}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": "YOUR_GOOGLE_DRIVE_FOLDER_ID",
+        "options": {}
+      },
+      "id": "b843d76d-993c-4e3e-9ff2-e1cb1beb06f5",
+      "name": "Upload Individual Files to Drive",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1760,
+        -688
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "54e7f80f-6f99-4b79-ac38-d28bd654e120",
+      "name": "Send Discord Response",
+      "type": "n8n-nodes-base.discordWebhook",
+      "typeVersion": 1,
+      "position": [
+        1728,
+        -1184
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{$('Create Comprehensive Report').item.json}}",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ]
+          }
+        }
+      },
+      "id": "9ce01e91-c45b-40a7-a8ce-263562605893",
+      "name": "Send Webhook Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        1856,
+        -864
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{$json}}",
+        "options": {}
+      },
+      "id": "bbb5915b-379a-483b-91f4-414746741483",
+      "name": "Error Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        304,
+        -832
+      ]
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get Execution for Carousel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Execution for Carousel": {
+      "main": [
+        [
+          {
+            "node": "List Files (Output Folder)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Publish Instagram Carousel": {
+      "main": [
+        [
+          {
+            "node": "Update Execute to \"Processed\"",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload images to Cloudinary": {
+      "main": [
+        [
+          {
+            "node": "Setup for Instagram (access token, ig_business_id)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Media Container (Image)": {
+      "main": [
+        [
+          {
+            "node": "Combine Instagram media containers",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Media Container (Carousel)": {
+      "main": [
+        [
+          {
+            "node": "Publish Instagram Carousel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Combine Instagram media containers": {
+      "main": [
+        [
+          {
+            "node": "Create Media Container (Carousel)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get image list from a Google Drive folder1": {
+      "main": [
+        []
+      ]
+    },
+    "Download Image from Google Drive (Carousel)": {
+      "main": [
+        [
+          {
+            "node": "Upload images to Cloudinary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Setup for Instagram (access token, ig_business_id)": {
+      "main": [
+        [
+          {
+            "node": "Create Media Container (Image)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "List Files (Output Folder)": {
+      "main": [
+        [
+          {
+            "node": "Pick File (Random)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pick File (Random)": {
+      "main": [
+        [
+          {
+            "node": "Download File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download File": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Delete File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Extract Images from Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Images from Input": {
+      "main": [
+        [
+          {
+            "node": "Validate Images Found",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Images Found": {
+      "main": [
+        [
+          {
+            "node": "Download Product Images",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Error Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Product Images": {
+      "main": [
+        [
+          {
+            "node": "Analyze Each Product Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze Each Product Image": {
+      "main": [
+        [
+          {
+            "node": "Generate SEO Content",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Generate Ad Image Prompts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate SEO Content": {
+      "main": [
+        [
+          {
+            "node": "Format Individual Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Ad Image Prompts": {
+      "main": [
+        [
+          {
+            "node": "Format Individual Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Individual Results": {
+      "main": [
+        [
+          {
+            "node": "Aggregate All Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate All Results": {
+      "main": [
+        [
+          {
+            "node": "Create Comprehensive Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Comprehensive Report": {
+      "main": [
+        [
+          {
+            "node": "Upload Report to Google Drive",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Create Individual JSON Files",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Individual JSON Files": {
+      "main": [
+        [
+          {
+            "node": "Upload Individual Files to Drive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload Individual Files to Drive": {
+      "main": [
+        [
+          {
+            "node": "Send Webhook Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "pinData": {},
+  "triggerCount": 0,
+  "meta": null
+}

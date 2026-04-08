@@ -1,0 +1,497 @@
+{
+  "name": "My workflow 4",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "time",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -592,
+        -112
+      ],
+      "id": "dde2f45c-db25-4e76-b0cd-312de98f4ef2",
+      "name": "Webhook",
+      "webhookId": "1427225a-46f7-43f5-9b96-8aa2b226eaa8"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.body.prompt }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "[dont give reasoning only give timetable]You are an AI Timetable Generation Agent.\nYour task is to generate a complete, professional, conflict-free academic timetable in gooogle sheet from the provided input table (courses, teachers, students, rooms, slots).\n\nFollow these rules and output instructions strictly:\n\n\n---\n\nObjectives\n\n1. Generate initial timetable:\n\nAssign subjects to available teachers and rooms.\n\nDistribute classes evenly across the week.\n\nRespect student batches/semesters.\n\n\n\n2. Conflict resolution:\n\nNo teacher should be double-booked.\n\nNo student batch should have two overlapping classes.\n\nNo room/lab should be assigned to two groups at the same time.\n\n\n\n3. Optimization goals:\n\nBalance teacher workload across the week.\n\nOptimize room/lab utilization (aim for >80% usage).\n\nAvoid overloading students (e.g., not >4 consecutive classes).\n\nLeave buffer slots for labs or electives.\n\n\n\n4. Adapt dynamically:\n\nIf teacher is absent (status = sick), reassign class if backup exists.\n\nIf no replacement available, mark slot as “Free/Cancelled” clearly.\n\n\n\n\n\n---\n\nInput Format\n\nYou will receive structured input as either:\n\nCSV/Excel style table (columns: Subject, Teacher, Room, Batch, Hours/Week), OR\n\nFirestore/JSON data with fields for teachers, students, rooms, timetable.\n\n\n\n---\n\nOutput Format\n\nProvide the timetable in clear structured table form:\n\nDays (Mon–Sat) × Time Slots (e.g., 9–10, 10–11, etc.)\n\nEach cell = Subject | Teacher | Room | Batch\n\n\nHighlight any unassigned slots or cancelled classes in a professional way (e.g., “---” or “Cancelled”).\n\nAt the end, include a Summary Report:\n\nTeacher workloads (hours/week per teacher)\n\nRoom utilization percentages\n\nStudent batch total hours/week\n\nConflicts detected & how they were resolved\n\n\n\n\n---\n\nStyle\n\nBe professional and concise.\n\nUse tables and summaries (not plain text blocks).\n\nOutput should be ready to present to school/college admin."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        288,
+        -208
+      ],
+      "id": "9a36fa4d-12cf-4752-ba7c-4d47cbb1a0fb",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        96,
+        176
+      ],
+      "id": "dc87d8ba-a748-4425-b165-dd55c0f374a9",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "2adWgmMSgbuJMaZn",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "d76a1901-07ff-49fc-a708-147fcdae766e",
+              "leftValue": "={{ $json.body.prompt }}",
+              "rightValue": "=text {{ $json.body.prompt }}",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "6c085c4b-b368-4e8d-b385-0ed7285ba321",
+              "leftValue": "={{ $json.body.prompt }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notExists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -384,
+        -112
+      ],
+      "id": "f14765e9-a8e7-4bfc-897b-2fe203b82b41",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"time table\": \"\"\n} {{ $json.output.state }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        768,
+        -112
+      ],
+      "id": "0f9d8527-c5fa-4688-a8a1-73a45d955e30",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "schemaType": "manual"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        608,
+        80
+      ],
+      "id": "383ef796-7ac8-4c67-bb32-4c2cf8f99919",
+      "name": "Structured Output Parser",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "operation": "xlsx",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        48,
+        -112
+      ],
+      "id": "66cba473-abc0-4ed6-8069-f4b8f5b30eec",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "03e004dc-66e3-4668-b4af-dec06a09ad65"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "f692d973-ecd7-4c85-bf87-f4a5d4ebf10a",
+                    "leftValue": "",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "580d1615-8d7d-48a1-abca-e5b59ab68adc",
+                    "leftValue": "",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -400,
+        80
+      ],
+      "id": "1df02ba0-e919-436f-b556-35b75d13a0f6",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        -96,
+        -16
+      ],
+      "id": "fdfe9cbf-ea8e-41fe-9463-e4c4e7e3557b",
+      "name": "Extract from File1"
+    },
+    {
+      "parameters": {
+        "operation": "xls",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        -112,
+        80
+      ],
+      "id": "b3b50731-1d02-44f0-a7c3-4885a62f82cc",
+      "name": "Extract from File2"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1xc13iHHjdLa1IPfzv5IX0lUyzEUhXbS9D0zr5oxxK2g",
+          "mode": "list",
+          "cachedResultName": "Schedule",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1xc13iHHjdLa1IPfzv5IX0lUyzEUhXbS9D0zr5oxxK2g/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Daily schedule",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1xc13iHHjdLa1IPfzv5IX0lUyzEUhXbS9D0zr5oxxK2g/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "day",
+              "displayName": "day",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "period",
+              "displayName": "period",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "class",
+              "displayName": "class",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "subject",
+              "displayName": "subject",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "teacher",
+              "displayName": "teacher",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "room",
+              "displayName": "room",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        400,
+        128
+      ],
+      "id": "f3437660-c6e4-40b0-bc3c-bda0eebe0a7f",
+      "name": "Append row in sheet in Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ht7YbtWnyRqrJXBY",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Extract from File1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Extract from File2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File1": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File2": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet in Google Sheets": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "pinData": {},
+  "triggerCount": 1,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  }
+}
