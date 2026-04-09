@@ -1906,6 +1906,7 @@ img {
 }
 
 .reel-card {
+    position: relative;
     text-align: left;
     background: var(--black);
     color: var(--white);
@@ -1974,28 +1975,91 @@ img {
 }
 
 .reel-meta {
-    padding: 14px 14px 16px;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 24px 16px 16px;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.4) 60%, transparent 100%);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+    z-index: 10;
+}
+
+.reel-card:hover .reel-meta {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
 }
 
 .reel-name {
     font-weight: 900;
-    font-size: 0.95rem;
-    margin-bottom: 4px;
+    font-size: 1.1rem;
+    margin-bottom: 6px;
+    color: var(--white);
 }
 
 .reel-tags {
-    font-family: var(--font-mono);
-    font-size: 0.66rem;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.65);
+    font-size: 0.8rem;
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.85);
 }
 
-/* Masonry (CSS columns with fallback-like behavior) */
+.reel-tags strong {
+    color: var(--accent-yellow);
+}
+
+/* Photography Gallery (Masonry Layout) */
+.gallery-masonry {
+    column-count: 2;
+    column-gap: 18px;
+    padding: 0 24px;
+    max-width: calc(var(--max-w) + 48px);
+    margin: 32px auto 80px;
+}
+
+@media (min-width: 768px) {
+    .gallery-masonry {
+        column-count: 3;
+    }
+}
+
+.gallery-item {
+    break-inside: avoid;
+    margin-bottom: 18px;
+    background: var(--black);
+    border: var(--border-w) solid var(--black);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    position: relative;
+    box-shadow: 4px 4px 0 var(--black);
+    transition: all 0.3s ease;
+    cursor: zoom-in;
+}
+
+.gallery-item:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 8px 8px 0 var(--black);
+}
+
+.gallery-item img {
+    width: 100%;
+    height: auto;
+    display: block;
+    filter: brightness(0.95);
+    transition: filter 0.3s ease;
+}
+
+.gallery-item:hover img {
+    filter: brightness(1.1);
+}
+
+/* Header for stills */
 .stills-header {
-    margin-top: 40px;
-    margin-bottom: 14px;
+    margin-top: 60px;
+    margin-bottom: 24px;
 }
 
 .stills-title {
