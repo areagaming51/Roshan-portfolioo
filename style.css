@@ -1371,43 +1371,6 @@ img {
     box-shadow: var(--shadow-sm);
 }
 
-/* --- SLIDER GALLERY & PLACEHOLDERS --- */
-
-.slider-gallery {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 20px;
-    margin-top: 20px;
-}
-
-.slider-gallery .slider-container { aspect-ratio: 4 / 5; }
-.slider-container { cursor: ew-resize; }
-
-.slider-container .handle-circle { pointer-events: auto; cursor: grab; }
-
-.masonry-placeholder {
-    width: 100%;
-    aspect-ratio: 4 / 5;
-    background: linear-gradient(135deg, var(--bg-alt), #eee);
-    border: var(--border-w) solid var(--black);
-    border-radius: var(--radius-sm);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--text-muted);
-}
-
-.masonry-placeholder .masonry-ratio {
-    width: 100%;
-    height: 100%;
-}
-
-.placeholder-text {
-    font-family: var(--font-mono);
-    font-size: 0.85rem;
-    font-weight: 700;
-    color: var(--text-muted);
-}
 /* --- HERO PREVIEW CARD --- */
 .hero-preview-card {
     margin-top: 40px;

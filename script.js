@@ -129,67 +129,44 @@ document.addEventListener('DOMContentLoaded', () => {
         }, { passive: true });
     }
 
-    // ---- Before/After Slider (supports multiple instances) ----
-    const sliderContainers = document.querySelectorAll('.slider-container[data-before-after="true"]');
-    if (sliderContainers.length) {
-        sliderContainers.forEach((slider) => {
-            // apply optional aspect ratio declared on the slider (e.g. data-ratio="4/5" or "16/9")
-            const ratioRaw = slider.dataset.ratio || '4/5';
-            const ratioParts = ratioRaw.includes('/') ? ratioRaw.split('/').map(s => s.trim()) : [ratioRaw];
-            if (ratioParts.length === 2) slider.style.setProperty('aspect-ratio', `${ratioParts[0]} / ${ratioParts[1]}`);
-            else slider.style.setProperty('aspect-ratio', ratioRaw);
+    // ---- Before/After Slider ----
+    const slider = document.getElementById('beforeAfterSlider');
+    if (slider) {
+        const handle = slider.querySelector('.slider-handle');
+        const afterImg = slider.querySelector('.after-image');
+        let isDragging = false;
 
-            const handle = slider.querySelector('.slider-handle');
-            const afterImg = slider.querySelector('.after-image');
-            let isDragging = false;
+        const updateSlider = (x) => {
+            const rect = slider.getBoundingClientRect();
+            let position = ((x - rect.left) / rect.width) * 100;
+            position = Math.max(0, Math.min(100, position));
+            handle.style.left = `${position}%`;
+            afterImg.style.clipPath = `inset(0 0 0 ${position}%)`;
+        };
 
-            const setPositionFromClientX = (clientX) => {
-                const rect = slider.getBoundingClientRect();
-                let position = ((clientX - rect.left) / rect.width) * 100;
-                position = Math.max(0, Math.min(100, position));
-                if (handle) handle.style.left = `${position}%`;
-                if (afterImg) afterImg.style.clipPath = `inset(0 0 0 ${position}%)`;
-            };
+        const onMove = (e) => {
+            if (!isDragging) return;
+            const x = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
+            updateSlider(x);
+        };
 
-            const onPointerMove = (e) => {
-                if (!isDragging) return;
-                const clientX = e.clientX || (e.touches && e.touches[0] && e.touches[0].clientX);
-                if (clientX) setPositionFromClientX(clientX);
-            };
+        const startDragging = (e) => {
+            isDragging = true;
+            slider.classList.add('dragging');
+            onMove(e);
+        };
 
-            const start = (e) => {
-                isDragging = true;
-                slider.classList.add('dragging');
-                const clientX = e.clientX || (e.touches && e.touches[0] && e.touches[0].clientX);
-                if (clientX) setPositionFromClientX(clientX);
-                e.preventDefault?.();
-            };
+        const stopDragging = () => {
+            isDragging = false;
+            slider.classList.remove('dragging');
+        };
 
-            const stop = () => {
-                isDragging = false;
-                slider.classList.remove('dragging');
-            };
-
-            // Pointer events (unified)
-            slider.addEventListener('pointerdown', (e) => {
-                try { slider.setPointerCapture?.(e.pointerId); } catch (err) { }
-                start(e);
-            });
-            window.addEventListener('pointermove', onPointerMove);
-            window.addEventListener('pointerup', stop);
-
-            // click to reposition
-            slider.addEventListener('click', (e) => {
-                const clientX = e.clientX || (e.touches && e.touches[0] && e.touches[0].clientX);
-                if (clientX) setPositionFromClientX(clientX);
-            });
-
-            // initialize at 50%
-            setTimeout(() => {
-                const rect = slider.getBoundingClientRect();
-                if (rect.width > 0) setPositionFromClientX(rect.left + rect.width / 2);
-            }, 80);
-        });
+        slider.addEventListener('mousedown', startDragging);
+        slider.addEventListener('touchstart', startDragging, { passive: true });
+        window.addEventListener('mousemove', onMove);
+        window.addEventListener('touchmove', onMove, { passive: true });
+        window.addEventListener('mouseup', stopDragging);
+        window.addEventListener('touchend', stopDragging);
     }
 
     // ---- Gallery tabs (filter) ----
