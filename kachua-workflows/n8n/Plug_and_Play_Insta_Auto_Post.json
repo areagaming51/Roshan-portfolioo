@@ -1,0 +1,324 @@
+{
+  "name": "Plug & Play Insta Auto Post (Auth Version)",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 5
+            }
+          ]
+        }
+      },
+      "id": "trigger_node",
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "read",
+        "documentId": {
+          "__rl": true,
+          "value": "<YOUR_SPREADSHEET_ID>",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "<YOUR_SHEET_NAME>",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "id": "sheets_read",
+      "name": "Get Row from Google Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        200,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "list",
+        "useQueryString": true,
+        "queryString": "='<YOUR_IMAGE_FOLDER_ID>' in parents and trashed=false",
+        "options": {}
+      },
+      "id": "drive_list",
+      "name": "Google Drive (List Files)",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        400,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "id": "drive_download",
+      "name": "Google Drive (Download Model)",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        600,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "file": "data",
+        "options": {
+          "folder": "n8n_uploads"
+        }
+      },
+      "id": "cloudinary_upload",
+      "name": "Cloudinary (Upload)",
+      "type": "n8n-nodes-base.cloudinary",
+      "typeVersion": 1,
+      "position": [
+        800,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c1",
+              "leftValue": "={{ $json.resource_type }}",
+              "rightValue": "video",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "if_video",
+      "name": "Is Video?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1000,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "pageId": {
+          "__rl": true,
+          "value": "<YOUR_IG_BUSINESS_ACCOUNT>",
+          "mode": "id"
+        },
+        "image": "={{ $json.secure_url }}",
+        "caption": "={{ $('Get Row from Google Sheets').item.json['Expected content'] }}",
+        "additionalFields": {
+          "isCarouselItem": true
+        }
+      },
+      "id": "ig_image_child",
+      "name": "Instagram (Image Child)",
+      "type": "n8n-nodes-base.instagramBusiness",
+      "typeVersion": 1,
+      "position": [
+        1200,
+        100
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "uploadVideo",
+        "pageId": {
+          "__rl": true,
+          "value": "<YOUR_IG_BUSINESS_ACCOUNT>",
+          "mode": "id"
+        },
+        "videoUrl": "={{ $json.secure_url }}",
+        "caption": "={{ $('Get Row from Google Sheets').item.json['Expected content'] }}",
+        "additionalFields": {
+          "isCarouselItem": true
+        }
+      },
+      "id": "ig_video_child",
+      "name": "Instagram (Video Child)",
+      "type": "n8n-nodes-base.instagramBusiness",
+      "typeVersion": 1,
+      "position": [
+        1200,
+        -100
+      ]
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "destinationFieldName": "all_children_ids",
+        "options": {}
+      },
+      "id": "aggregate_ids",
+      "name": "Gather Carousel IDs",
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        1400,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "postCarousel",
+        "pageId": {
+          "__rl": true,
+          "value": "<YOUR_IG_BUSINESS_ACCOUNT>",
+          "mode": "id"
+        },
+        "children": "={{ $json.all_children_ids.map(item => item.id).join(',') }}",
+        "caption": "={{ $('Get Row from Google Sheets').item.json['Expected content'] }}",
+        "additionalFields": {}
+      },
+      "id": "ig_carousel_publish",
+      "name": "Instagram (Publish Carousel)",
+      "type": "n8n-nodes-base.instagramBusiness",
+      "typeVersion": 1,
+      "position": [
+        1600,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get Row from Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Row from Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "Google Drive (List Files)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Drive (List Files)": {
+      "main": [
+        [
+          {
+            "node": "Google Drive (Download Model)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Drive (Download Model)": {
+      "main": [
+        [
+          {
+            "node": "Cloudinary (Upload)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cloudinary (Upload)": {
+      "main": [
+        [
+          {
+            "node": "Is Video?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Video?": {
+      "main": [
+        [
+          {
+            "node": "Instagram (Video Child)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Instagram (Image Child)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Instagram (Video Child)": {
+      "main": [
+        [
+          {
+            "node": "Gather Carousel IDs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Instagram (Image Child)": {
+      "main": [
+        [
+          {
+            "node": "Gather Carousel IDs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gather Carousel IDs": {
+      "main": [
+        [
+          {
+            "node": "Instagram (Publish Carousel)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {},
+  "pinData": {}
+}

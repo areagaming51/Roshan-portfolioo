@@ -1,0 +1,2514 @@
+{
+    "nodes": [
+        {
+            "id": "backdrop-Lead-Gen",
+            "name": "Lead Gen",
+            "type": "n8n-nodes-base.stickyNote",
+            "typeVersion": 1,
+            "position": [
+                -36,
+                554
+            ],
+            "parameters": {
+                "content": "# FIRST STEP: LEAD GEN",
+                "width": 3842,
+                "height": 542,
+                "color": 6
+            }
+        },
+        {
+            "id": "backdrop-Outreach-Manual",
+            "name": "Outreach Manual",
+            "type": "n8n-nodes-base.stickyNote",
+            "typeVersion": 1,
+            "position": [
+                0,
+                1400
+            ],
+            "parameters": {
+                "content": "# n8n Cold Email Sequence Workflow",
+                "width": 650,
+                "height": 2600,
+                "color": 6
+            }
+        },
+        {
+            "id": "backdrop-Email-Sequence-Creation",
+            "name": "Email Sequence Creation",
+            "type": "n8n-nodes-base.stickyNote",
+            "typeVersion": 1,
+            "position": [
+                -36,
+                1290
+            ],
+            "parameters": {
+                "content": "# EMAIL SEQUENCE CREATION",
+                "width": 3522,
+                "height": 1386,
+                "color": 3
+            }
+        },
+        {
+            "id": "backdrop-Email-1",
+            "name": "Email 1",
+            "type": "n8n-nodes-base.stickyNote",
+            "typeVersion": 1,
+            "position": [
+                -36,
+                1510
+            ],
+            "parameters": {
+                "content": "# EMAIL 1",
+                "width": 2466,
+                "height": 1822,
+                "color": 2
+            }
+        },
+        {
+            "id": "backdrop-Email-2",
+            "name": "Email 2",
+            "type": "n8n-nodes-base.stickyNote",
+            "typeVersion": 1,
+            "position": [
+                -36,
+                2910
+            ],
+            "parameters": {
+                "content": "# EMAIL 2",
+                "width": 2466,
+                "height": 1006,
+                "color": 1
+            }
+        },
+        {
+            "id": "backdrop-Email-3",
+            "name": "Email 3",
+            "type": "n8n-nodes-base.stickyNote",
+            "typeVersion": 1,
+            "position": [
+                -36,
+                2326
+            ],
+            "parameters": {
+                "content": "# EMAIL 3",
+                "width": 1122,
+                "height": 3694,
+                "color": 4
+            }
+        },
+        {
+            "id": "backdrop-Lead-Management",
+            "name": "Lead Management",
+            "type": "n8n-nodes-base.stickyNote",
+            "typeVersion": 1,
+            "position": [
+                -36,
+                3894
+            ],
+            "parameters": {
+                "content": "# Step 3: Lead Management",
+                "width": 2258,
+                "height": 678,
+                "color": 6
+            }
+        },
+        {
+            "id": "backdrop-SECOND-STEP-OUTREACH",
+            "name": "SECOND STEP OUTREACH",
+            "type": "n8n-nodes-base.stickyNote",
+            "typeVersion": 1,
+            "position": [
+                -86,
+                1240
+            ],
+            "parameters": {
+                "content": "# SECOND STEP: OUTREACH",
+                "width": 3622,
+                "height": 4830,
+                "color": 6
+            }
+        },
+        {
+            "id": "sticky-doc-Doc-LeadGen1",
+            "name": "Doc-LeadGen1",
+            "type": "n8n-nodes-base.stickyNote",
+            "typeVersion": 1,
+            "position": [
+                64,
+                654
+            ],
+            "parameters": {
+                "content": "## Template for lead gen that i published for free here\n\nhttps://n8n.io/workflows/5611",
+                "width": 2000,
+                "height": 80,
+                "color": 2
+            }
+        },
+        {
+            "id": "sticky-doc-Doc-LeadGenInfo",
+            "name": "Doc-LeadGenInfo",
+            "type": "n8n-nodes-base.stickyNote",
+            "typeVersion": 1,
+            "position": [
+                2564,
+                654
+            ],
+            "parameters": {
+                "content": "## Who's it for\n\nGrowth hackers, SDR teams...\n\n### How it works\n1. Telegram trigger...\n2. OpenAI Whisper...\n3. Code node crafts URL...\n\n### How to set up\n...",
+                "width": 1000,
+                "height": 500,
+                "color": 1
+            }
+        },
+        {
+            "parameters": {},
+            "id": "a0b6e5a1-170d-4277-98a6-2a0ec588c515",
+            "name": "Limit",
+            "type": "n8n-nodes-base.limit",
+            "position": [
+                960,
+                1564
+            ],
+            "typeVersion": 1
+        },
+        {
+            "parameters": {},
+            "id": "0bec65f7-9abb-4cf9-beae-ebee9e01661d",
+            "name": "Merge",
+            "type": "n8n-nodes-base.merge",
+            "position": [
+                2464,
+                1564
+            ],
+            "typeVersion": 3.1
+        },
+        {
+            "parameters": {},
+            "id": "e4b9fc60-5a0c-4471-a3f8-084002222b7a",
+            "name": "Time Zone",
+            "type": "n8n-nodes-base.code",
+            "position": [
+                2688,
+                1564
+            ],
+            "typeVersion": 2
+        },
+        {
+            "parameters": {},
+            "id": "04938ca9-8a02-49ae-89a1-183ed18616cd",
+            "name": "Sender Email",
+            "type": "n8n-nodes-base.code",
+            "position": [
+                2912,
+                1564
+            ],
+            "typeVersion": 2
+        },
+        {
+            "parameters": {
+                "rules": {
+                    "values": [
+                        {
+                            "conditions": {
+                                "options": {
+                                    "caseSensitive": true,
+                                    "leftValue": "",
+                                    "typeValidation": "strict"
+                                },
+                                "conditions": [
+                                    {
+                                        "leftValue": "",
+                                        "rightValue": "",
+                                        "operator": {
+                                            "type": "string",
+                                            "operation": "equals"
+                                        }
+                                    }
+                                ],
+                                "combinator": "and"
+                            }
+                        }
+                    ]
+                },
+                "options": {}
+            },
+            "id": "e2559cb7-f767-4405-a037-2f2fb1ff946c",
+            "name": "Switch",
+            "type": "n8n-nodes-base.switch",
+            "position": [
+                1184,
+                2356
+            ],
+            "typeVersion": 3.2
+        },
+        {
+            "parameters": {
+                "options": {}
+            },
+            "id": "03d1368c-af67-4227-b111-7af7fcc33e1e",
+            "name": "Loop Over Items",
+            "type": "n8n-nodes-base.splitInBatches",
+            "position": [
+                1408,
+                2356
+            ],
+            "typeVersion": 3
+        },
+        {
+            "parameters": {},
+            "id": "ceb1cfb6-81da-4428-9c54-7e593ba0e907",
+            "name": "Wait",
+            "type": "n8n-nodes-base.wait",
+            "position": [
+                1856,
+                2404
+            ],
+            "webhookId": "c4cf719a-d47f-4761-8a16-aff92b8e9a19",
+            "typeVersion": 1.1
+        },
+        {
+            "parameters": {
+                "options": {}
+            },
+            "id": "0222e916-2920-4d50-a229-d8974b37f489",
+            "name": "Loop Over Items1",
+            "type": "n8n-nodes-base.splitInBatches",
+            "position": [
+                64,
+                4772
+            ],
+            "typeVersion": 3
+        },
+        {
+            "parameters": {},
+            "id": "59b5ad50-64b9-4f5e-b87c-7f36f52e1ff8",
+            "name": "Wait1",
+            "type": "n8n-nodes-base.wait",
+            "position": [
+                512,
+                4844
+            ],
+            "webhookId": "c4cf719a-d47f-4761-8a16-aff92b8e9a19",
+            "typeVersion": 1.1
+        },
+        {
+            "parameters": {
+                "rule": {
+                    "interval": [
+                        {}
+                    ]
+                }
+            },
+            "id": "0a56bfb6-2f79-4196-9de3-cfa4c90aa2c2",
+            "name": "Schedule Trigger1",
+            "type": "n8n-nodes-base.scheduleTrigger",
+            "position": [
+                64,
+                2476
+            ],
+            "typeVersion": 1.2
+        },
+        {
+            "parameters": {
+                "options": {}
+            },
+            "id": "8aa5db5d-9c68-4414-805f-810988c4fde7",
+            "name": "If3",
+            "type": "n8n-nodes-base.if",
+            "position": [
+                512,
+                1660
+            ],
+            "typeVersion": 2.2
+        },
+        {
+            "parameters": {},
+            "id": "320db019-75fd-45c2-964c-7ab5c6e0376a",
+            "name": "Mailgun",
+            "type": "n8n-nodes-base.mailgun",
+            "position": [
+                288,
+                4772
+            ],
+            "typeVersion": 1,
+            "onError": "continueRegularOutput"
+        },
+        {
+            "parameters": {},
+            "id": "8812760d-4450-44fa-ae73-62fe4a05c0fe",
+            "name": "Mailgun1",
+            "type": "n8n-nodes-base.mailgun",
+            "position": [
+                1632,
+                2380
+            ],
+            "typeVersion": 1,
+            "onError": "continueRegularOutput"
+        },
+        {
+            "parameters": {
+                "modelId": {
+                    "__rl": true,
+                    "mode": "list",
+                    "value": ""
+                },
+                "messages": {
+                    "values": [
+                        {}
+                    ]
+                },
+                "options": {}
+            },
+            "id": "2f17969d-6e86-4f00-8c94-1213b13a613e",
+            "name": "General anlysis",
+            "type": "@n8n/n8n-nodes-langchain.openAi",
+            "position": [
+                1536,
+                1440
+            ],
+            "typeVersion": 1.8
+        },
+        {
+            "parameters": {},
+            "id": "6399f9ff-e7c1-4ec2-b5eb-2b1607850ba5",
+            "name": "Limit1",
+            "type": "n8n-nodes-base.limit",
+            "position": [
+                960,
+                2356
+            ],
+            "typeVersion": 1
+        },
+        {
+            "parameters": {
+                "model": {
+                    "__rl": true,
+                    "mode": "list",
+                    "value": "gpt-4.1-mini"
+                },
+                "options": {}
+            },
+            "id": "1e80e39c-fc99-45dc-a890-4ac4560d9135",
+            "name": "OpenAI Chat Model",
+            "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+            "position": [
+                1960,
+                1664
+            ],
+            "typeVersion": 1.2
+        },
+        {
+            "parameters": {},
+            "id": "8637025d-2ade-43cb-b292-0a84d247e350",
+            "name": "No Operation, do nothing",
+            "type": "n8n-nodes-base.noOp",
+            "position": [
+                736,
+                1756
+            ],
+            "typeVersion": 1
+        },
+        {
+            "parameters": {},
+            "id": "649db81b-4994-4666-88b7-6b215a0c3dbb",
+            "name": "Supabase2",
+            "type": "n8n-nodes-base.supabase",
+            "position": [
+                288,
+                2476
+            ],
+            "typeVersion": 1
+        },
+        {
+            "parameters": {
+                "options": {}
+            },
+            "id": "ce491233-d35b-4dbc-ae88-5bb4c26f0ec5",
+            "name": "If2",
+            "type": "n8n-nodes-base.if",
+            "position": [
+                736,
+                2476
+            ],
+            "typeVersion": 2.2
+        },
+        {
+            "parameters": {},
+            "id": "26d19c74-ca3c-4f21-bfbb-20c0d58c0ab4",
+            "name": "No Operation, do nothing2",
+            "type": "n8n-nodes-base.noOp",
+            "position": [
+                960,
+                2548
+            ],
+            "typeVersion": 1
+        },
+        {
+            "parameters": {},
+            "id": "b5694ce9-b716-4f93-be1f-8d7dd990fcda",
+            "name": "Supabase3",
+            "type": "n8n-nodes-base.supabase",
+            "position": [
+                1632,
+                2188
+            ],
+            "typeVersion": 1
+        },
+        {
+            "parameters": {},
+            "id": "57886cf4-460e-4a7e-80c6-513e2cd14808",
+            "name": "Supabase4",
+            "type": "n8n-nodes-base.supabase",
+            "position": [
+                288,
+                4580
+            ],
+            "typeVersion": 1
+        },
+        {
+            "parameters": {},
+            "id": "ae5d4073-2984-44d7-9011-6d6319763bc8",
+            "name": "Structured Output Parser",
+            "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+            "position": [
+                64,
+                1980
+            ],
+            "typeVersion": 1.2,
+            "disabled": true
+        },
+        {
+            "parameters": {},
+            "id": "7ddc3dba-7073-4c53-ac88-a50ab980fb9c",
+            "name": "Code",
+            "type": "n8n-nodes-base.code",
+            "position": [
+                2240,
+                1440
+            ],
+            "typeVersion": 2
+        },
+        {
+            "parameters": {
+                "rule": {
+                    "interval": [
+                        {}
+                    ]
+                }
+            },
+            "id": "1d34194c-ce31-40ef-aa64-f64beadf8661",
+            "name": "Schedule Trigger3",
+            "type": "n8n-nodes-base.scheduleTrigger",
+            "position": [
+                64,
+                1660
+            ],
+            "typeVersion": 1.2
+        },
+        {
+            "parameters": {},
+            "id": "8c60dfd3-204e-4f30-9e32-34a5ce2aa846",
+            "name": "Supabase11",
+            "type": "n8n-nodes-base.supabase",
+            "position": [
+                288,
+                3060
+            ],
+            "typeVersion": 1
+        },
+        {
+            "parameters": {
+                "options": {}
+            },
+            "id": "15f8ce64-4539-4bf7-be82-a190ab4babc7",
+            "name": "If1",
+            "type": "n8n-nodes-base.if",
+            "position": [
+                736,
+                3060
+            ],
+            "typeVersion": 2.2
+        },
+        {
+            "parameters": {},
+            "id": "1985e6a0-9c64-49f1-a7fe-5036ecaa3b2c",
+            "name": "Evualute when the mail was sent",
+            "type": "n8n-nodes-base.code",
+            "position": [
+                512,
+                3060
+            ],
+            "typeVersion": 2
+        },
+        {
+            "parameters": {
+                "options": {}
+            },
+            "id": "66e14210-3976-4486-843a-43218142460f",
+            "name": "Sort",
+            "type": "n8n-nodes-base.sort",
+            "position": [
+                960,
+                2940
+            ],
+            "typeVersion": 1
+        },
+        {
+            "parameters": {
+                "options": {}
+            },
+            "id": "5ac0533a-1b93-4626-a54f-2b7ade890168",
+            "name": "Sort1",
+            "type": "n8n-nodes-base.sort",
+            "position": [
+                736,
+                1564
+            ],
+            "typeVersion": 1
+        },
+        {
+            "parameters": {
+                "options": {}
+            },
+            "id": "f259c4e0-6c81-4ee5-9baa-e409500117b7",
+            "name": "Sort2",
+            "type": "n8n-nodes-base.sort",
+            "position": [
+                512,
+                2476
+            ],
+            "typeVersion": 1
+        },
+        {
+            "parameters": {},
+            "id": "6c9b703e-9841-4d3f-b31e-3c16ec223eb1",
+            "name": "Limit2",
+            "type": "n8n-nodes-base.limit",
+            "position": [
+                1184,
+                2940
+            ],
+            "typeVersion": 1
+        },
+        {
+            "parameters": {
+                "rules": {
+                    "values": [
+                        {
+                            "conditions": {
+                                "options": {
+                                    "caseSensitive": true,
+                                    "leftValue": "",
+                                    "typeValidation": "strict"
+                                },
+                                "conditions": [
+                                    {
+                                        "leftValue": "",
+                                        "rightValue": "",
+                                        "operator": {
+                                            "type": "string",
+                                            "operation": "equals"
+                                        }
+                                    }
+                                ],
+                                "combinator": "and"
+                            }
+                        }
+                    ]
+                },
+                "options": {}
+            },
+            "id": "0105bc57-1297-4aac-abb5-a748f9d0ab2a",
+            "name": "Switch5",
+            "type": "n8n-nodes-base.switch",
+            "position": [
+                1408,
+                2940
+            ],
+            "typeVersion": 3.2
+        },
+        {
+            "parameters": {
+                "options": {}
+            },
+            "id": "11f5c836-b83d-413f-a0d4-4b6abdbba437",
+            "name": "Loop Over Items7",
+            "type": "n8n-nodes-base.splitInBatches",
+            "position": [
+                1632,
+                2940
+            ],
+            "typeVersion": 3
+        },
+        {
+            "parameters": {},
+            "id": "8fb90188-9b4f-4675-88e8-b5513e105499",
+            "name": "Wait7",
+            "type": "n8n-nodes-base.wait",
+            "position": [
+                2080,
+                2988
+            ],
+            "webhookId": "c4cf719a-d47f-4761-8a16-aff92b8e9a19",
+            "typeVersion": 1.1
+        },
+        {
+            "parameters": {
+                "options": {}
+            },
+            "id": "04105d3c-8989-4b38-87fc-7db738fa11e9",
+            "name": "Loop Over Items10",
+            "type": "n8n-nodes-base.splitInBatches",
+            "position": [
+                64,
+                5260
+            ],
+            "typeVersion": 3
+        },
+        {
+            "parameters": {},
+            "id": "71818491-14eb-4f18-9037-335434f6bc8c",
+            "name": "Wait10",
+            "type": "n8n-nodes-base.wait",
+            "position": [
+                512,
+                5332
+            ],
+            "webhookId": "c4cf719a-d47f-4761-8a16-aff92b8e9a19",
+            "typeVersion": 1.1
+        },
+        {
+            "parameters": {},
+            "id": "f2ec7806-a170-4d9e-853d-3dff3da4f766",
+            "name": "Mailgun6",
+            "type": "n8n-nodes-base.mailgun",
+            "position": [
+                288,
+                5260
+            ],
+            "typeVersion": 1,
+            "onError": "continueRegularOutput"
+        },
+        {
+            "parameters": {},
+            "id": "b459f4e4-b33b-47ca-ac89-5a1fb7dbecf9",
+            "name": "Mailgun7",
+            "type": "n8n-nodes-base.mailgun",
+            "position": [
+                1856,
+                2964
+            ],
+            "typeVersion": 1,
+            "onError": "continueRegularOutput"
+        },
+        {
+            "parameters": {},
+            "id": "f91c627f-4982-4c86-b765-ed16712ef434",
+            "name": "Supabase12",
+            "type": "n8n-nodes-base.supabase",
+            "position": [
+                1856,
+                2772
+            ],
+            "typeVersion": 1
+        },
+        {
+            "parameters": {},
+            "id": "def759c7-1136-4cb5-8672-97580b426326",
+            "name": "Supabase14",
+            "type": "n8n-nodes-base.supabase",
+            "position": [
+                288,
+                5068
+            ],
+            "typeVersion": 1
+        },
+        {
+            "parameters": {
+                "rule": {
+                    "interval": [
+                        {}
+                    ]
+                }
+            },
+            "id": "32dad383-bef0-4712-a49b-d589da0ae138",
+            "name": "Schedule Trigger4",
+            "type": "n8n-nodes-base.scheduleTrigger",
+            "position": [
+                64,
+                3060
+            ],
+            "typeVersion": 1.2
+        },
+        {
+            "parameters": {},
+            "id": "5a893ff9-c265-4da5-898d-001a7060e23a",
+            "name": "No Operation, do nothing1",
+            "type": "n8n-nodes-base.noOp",
+            "position": [
+                960,
+                3132
+            ],
+            "typeVersion": 1
+        },
+        {
+            "parameters": {},
+            "id": "81578720-dc8c-483f-b0dd-6a612825400b",
+            "name": "Supabase13",
+            "type": "n8n-nodes-base.supabase",
+            "position": [
+                288,
+                3644
+            ],
+            "typeVersion": 1
+        },
+        {
+            "parameters": {
+                "options": {}
+            },
+            "id": "5ead930a-b3d3-4b7d-91f1-1eb91f64889c",
+            "name": "If",
+            "type": "n8n-nodes-base.if",
+            "position": [
+                736,
+                3644
+            ],
+            "typeVersion": 2.2
+        },
+        {
+            "parameters": {},
+            "id": "8e952031-57bb-496c-a692-1efa98bbced5",
+            "name": "Evualute when the mail was sent1",
+            "type": "n8n-nodes-base.code",
+            "position": [
+                512,
+                3644
+            ],
+            "typeVersion": 2
+        },
+        {
+            "parameters": {
+                "options": {}
+            },
+            "id": "702c3711-74a4-4ad1-a4c8-865541f375d8",
+            "name": "Sort3",
+            "type": "n8n-nodes-base.sort",
+            "position": [
+                960,
+                3524
+            ],
+            "typeVersion": 1
+        },
+        {
+            "parameters": {},
+            "id": "a02b6497-36ae-4a84-8434-db552b8b8989",
+            "name": "Limit4",
+            "type": "n8n-nodes-base.limit",
+            "position": [
+                1184,
+                3524
+            ],
+            "typeVersion": 1
+        },
+        {
+            "parameters": {
+                "rules": {
+                    "values": [
+                        {
+                            "conditions": {
+                                "options": {
+                                    "caseSensitive": true,
+                                    "leftValue": "",
+                                    "typeValidation": "strict"
+                                },
+                                "conditions": [
+                                    {
+                                        "leftValue": "",
+                                        "rightValue": "",
+                                        "operator": {
+                                            "type": "string",
+                                            "operation": "equals"
+                                        }
+                                    }
+                                ],
+                                "combinator": "and"
+                            }
+                        }
+                    ]
+                },
+                "options": {}
+            },
+            "id": "d7eaf8d5-b78b-48cb-abfb-806bec2f7075",
+            "name": "Switch6",
+            "type": "n8n-nodes-base.switch",
+            "position": [
+                1408,
+                3524
+            ],
+            "typeVersion": 3.2
+        },
+        {
+            "parameters": {
+                "options": {}
+            },
+            "id": "21dc7e97-459c-452c-abdc-d8c083fd97fa",
+            "name": "Loop Over Items8",
+            "type": "n8n-nodes-base.splitInBatches",
+            "position": [
+                1632,
+                3524
+            ],
+            "typeVersion": 3
+        },
+        {
+            "parameters": {},
+            "id": "6499260f-ede7-49c1-9e93-59ca0707a4a2",
+            "name": "Wait8",
+            "type": "n8n-nodes-base.wait",
+            "position": [
+                2080,
+                3572
+            ],
+            "webhookId": "c4cf719a-d47f-4761-8a16-aff92b8e9a19",
+            "typeVersion": 1.1
+        },
+        {
+            "parameters": {
+                "options": {}
+            },
+            "id": "8921b708-4aeb-4f21-a0aa-ff0ea6b97444",
+            "name": "Loop Over Items11",
+            "type": "n8n-nodes-base.splitInBatches",
+            "position": [
+                64,
+                5748
+            ],
+            "typeVersion": 3
+        },
+        {
+            "parameters": {},
+            "id": "096d897c-8b19-4827-8740-898ee5aedfe3",
+            "name": "Wait11",
+            "type": "n8n-nodes-base.wait",
+            "position": [
+                512,
+                5820
+            ],
+            "webhookId": "c4cf719a-d47f-4761-8a16-aff92b8e9a19",
+            "typeVersion": 1.1
+        },
+        {
+            "parameters": {},
+            "id": "566c8fc4-f048-4fa7-a5a5-929411a172b9",
+            "name": "Mailgun8",
+            "type": "n8n-nodes-base.mailgun",
+            "position": [
+                288,
+                5748
+            ],
+            "typeVersion": 1,
+            "onError": "continueRegularOutput"
+        },
+        {
+            "parameters": {},
+            "id": "eb10c687-bf5e-4445-8d24-c5e8397fb5ea",
+            "name": "Mailgun9",
+            "type": "n8n-nodes-base.mailgun",
+            "position": [
+                1856,
+                3548
+            ],
+            "typeVersion": 1,
+            "onError": "continueRegularOutput"
+        },
+        {
+            "parameters": {},
+            "id": "3ea9b30a-52fc-47f2-a5a9-60944a71f866",
+            "name": "Supabase15",
+            "type": "n8n-nodes-base.supabase",
+            "position": [
+                1856,
+                3356
+            ],
+            "typeVersion": 1
+        },
+        {
+            "parameters": {},
+            "id": "df030722-bed7-4ae5-85f4-12066586cfc5",
+            "name": "Supabase16",
+            "type": "n8n-nodes-base.supabase",
+            "position": [
+                288,
+                5556
+            ],
+            "typeVersion": 1
+        },
+        {
+            "parameters": {
+                "rule": {
+                    "interval": [
+                        {}
+                    ]
+                }
+            },
+            "id": "5de96e54-2a84-4282-8abf-623c4abeae1c",
+            "name": "Schedule Trigger6",
+            "type": "n8n-nodes-base.scheduleTrigger",
+            "position": [
+                64,
+                3644
+            ],
+            "typeVersion": 1.2
+        },
+        {
+            "parameters": {},
+            "id": "ab762bf8-1769-4d17-bd3c-dd115ae1007d",
+            "name": "No Operation, do nothing4",
+            "type": "n8n-nodes-base.noOp",
+            "position": [
+                960,
+                3716
+            ],
+            "typeVersion": 1
+        },
+        {
+            "parameters": {
+                "modelId": {
+                    "__rl": true,
+                    "mode": "list",
+                    "value": ""
+                },
+                "messages": {
+                    "values": [
+                        {}
+                    ]
+                },
+                "options": {}
+            },
+            "id": "5595bc75-41b6-4e0d-85f7-18b33ff0fa51",
+            "name": "research about company",
+            "type": "@n8n/n8n-nodes-langchain.openAi",
+            "position": [
+                1184,
+                1440
+            ],
+            "typeVersion": 1.8
+        },
+        {
+            "parameters": {
+                "options": {}
+            },
+            "id": "877c1dce-b893-4242-ba3d-d5f89bf85991",
+            "name": "create email sequence",
+            "type": "@n8n/n8n-nodes-langchain.agent",
+            "position": [
+                1888,
+                1440
+            ],
+            "typeVersion": 1.9
+        },
+        {
+            "parameters": {},
+            "id": "0d843e32-2e03-4a46-a906-6311eba3ffff",
+            "name": "Get many rows",
+            "type": "n8n-nodes-base.supabase",
+            "position": [
+                288,
+                1660
+            ],
+            "typeVersion": 1
+        },
+        {
+            "parameters": {},
+            "id": "b5fe8d1f-e2f8-4514-a677-12520a2468bc",
+            "name": "Your leads table",
+            "type": "n8n-nodes-base.supabase",
+            "position": [
+                3136,
+                1564
+            ],
+            "typeVersion": 1
+        },
+        {
+            "parameters": {},
+            "id": "b8c54716-26b8-4ebb-a496-5688cd9fa51a",
+            "name": "Create URL",
+            "type": "n8n-nodes-base.code",
+            "position": [
+                1664,
+                896
+            ],
+            "typeVersion": 2
+        },
+        {
+            "parameters": {
+                "options": {}
+            },
+            "id": "c3cb7693-bd0e-4542-b7ac-8dcc8a3eedde",
+            "name": "Extract Info",
+            "type": "n8n-nodes-base.set",
+            "position": [
+                2112,
+                896
+            ],
+            "typeVersion": 3.4
+        },
+        {
+            "parameters": {
+                "options": {}
+            },
+            "id": "b8757a54-b2bf-469e-90a0-18a0f9942907",
+            "name": "Only Keep Verified Emails ",
+            "type": "n8n-nodes-base.filter",
+            "position": [
+                2336,
+                896
+            ],
+            "typeVersion": 2.2
+        },
+        {
+            "parameters": {
+                "additionalFields": {}
+            },
+            "id": "00e92ea4-f354-430e-8218-bac2db8c26f5",
+            "name": "Download File1",
+            "type": "n8n-nodes-base.telegram",
+            "position": [
+                512,
+                704
+            ],
+            "webhookId": "00c7755c-cd84-4aa4-89fe-c56f1f0cb50d",
+            "typeVersion": 1.2
+        },
+        {
+            "parameters": {
+                "modelId": {
+                    "__rl": true,
+                    "mode": "list",
+                    "value": ""
+                },
+                "messages": {
+                    "values": [
+                        {}
+                    ]
+                },
+                "options": {}
+            },
+            "id": "e04b6bc6-ae6b-4e56-bbee-dc47d5b8364a",
+            "name": "Transcribe1",
+            "type": "@n8n/n8n-nodes-langchain.openAi",
+            "position": [
+                736,
+                704
+            ],
+            "typeVersion": 1.6
+        },
+        {
+            "parameters": {
+                "options": {}
+            },
+            "id": "065487bb-4f08-44d4-a3b7-82f7f26544e8",
+            "name": "Text1",
+            "type": "n8n-nodes-base.set",
+            "position": [
+                800,
+                896
+            ],
+            "typeVersion": 3.4
+        },
+        {
+            "parameters": {
+                "rules": {
+                    "values": [
+                        {
+                            "conditions": {
+                                "options": {
+                                    "caseSensitive": true,
+                                    "leftValue": "",
+                                    "typeValidation": "strict"
+                                },
+                                "conditions": [
+                                    {
+                                        "leftValue": "",
+                                        "rightValue": "",
+                                        "operator": {
+                                            "type": "string",
+                                            "operation": "equals"
+                                        }
+                                    }
+                                ],
+                                "combinator": "and"
+                            }
+                        }
+                    ]
+                },
+                "options": {}
+            },
+            "id": "ece7caf2-f063-4051-98b7-90036ac98291",
+            "name": "Voice or Text1",
+            "type": "n8n-nodes-base.switch",
+            "position": [
+                288,
+                704
+            ],
+            "typeVersion": 3.2
+        },
+        {
+            "parameters": {
+                "model": {
+                    "__rl": true,
+                    "mode": "list",
+                    "value": "gpt-4.1-mini"
+                },
+                "options": {}
+            },
+            "id": "92b74821-5c5f-43b5-a122-61e578da09d2",
+            "name": "OpenAI Chat Model1",
+            "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+            "position": [
+                1096,
+                1024
+            ],
+            "typeVersion": 1.2
+        },
+        {
+            "parameters": {},
+            "id": "7bca66b8-b25f-4a33-80c9-e5911187648f",
+            "name": "Simple Memory",
+            "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+            "position": [
+                1224,
+                1024
+            ],
+            "typeVersion": 1.3
+        },
+        {
+            "parameters": {
+                "schema": {
+                    "__rl": true,
+                    "mode": "list",
+                    "value": "public"
+                },
+                "table": {
+                    "__rl": true,
+                    "mode": "list",
+                    "value": ""
+                }
+            },
+            "id": "5a549843-104d-45f4-8dfc-de7e1a81299a",
+            "name": "Select already scraped mails",
+            "type": "n8n-nodes-base.postgres",
+            "position": [
+                2336,
+                704
+            ],
+            "typeVersion": 2.6
+        },
+        {
+            "parameters": {
+                "mergeByFields": {
+                    "values": [
+                        {}
+                    ]
+                },
+                "options": {}
+            },
+            "id": "32f395e7-7df1-4154-9235-c995c86ecfd1",
+            "name": "Keep only the new leads",
+            "type": "n8n-nodes-base.compareDatasets",
+            "position": [
+                2560,
+                768
+            ],
+            "typeVersion": 2.3
+        },
+        {
+            "parameters": {},
+            "id": "e297237b-f005-4a5a-aec4-9a730f61d884",
+            "name": "Already scraped",
+            "type": "n8n-nodes-base.noOp",
+            "position": [
+                2784,
+                704
+            ],
+            "typeVersion": 1
+        },
+        {
+            "parameters": {},
+            "id": "9f10db1f-f6cf-467b-8984-1e6bd68131a4",
+            "name": "Create rows with new leads",
+            "type": "n8n-nodes-base.supabase",
+            "position": [
+                2784,
+                896
+            ],
+            "typeVersion": 1
+        },
+        {
+            "parameters": {
+                "options": {}
+            },
+            "id": "f7244c2d-1182-482a-9beb-1d396f180a84",
+            "name": "Set Telegram message",
+            "type": "n8n-nodes-base.set",
+            "position": [
+                3008,
+                896
+            ],
+            "typeVersion": 3.4
+        },
+        {
+            "parameters": {
+                "additionalFields": {}
+            },
+            "id": "61ccbc3f-2870-43a6-89ff-22ab452affb0",
+            "name": "Confirmation message",
+            "type": "n8n-nodes-base.telegram",
+            "position": [
+                3456,
+                896
+            ],
+            "webhookId": "20bb0a77-76bc-4d9a-bdb4-f5e53a80d299",
+            "typeVersion": 1.2
+        },
+        {
+            "parameters": {
+                "additionalFields": {}
+            },
+            "id": "1c9c7041-62f9-4b7f-94af-a772ba3333df",
+            "name": "User message",
+            "type": "n8n-nodes-base.telegramTrigger",
+            "position": [
+                64,
+                704
+            ],
+            "webhookId": "75096a78-a466-4f4e-bc0d-f68e9e952231",
+            "typeVersion": 1.1
+        },
+        {
+            "parameters": {
+                "options": {}
+            },
+            "id": "37c02ac4-ef5b-4838-8e60-3a9a0264ff8e",
+            "name": "Generate query payload",
+            "type": "n8n-nodes-base.set",
+            "position": [
+                1440,
+                896
+            ],
+            "typeVersion": 3.4
+        },
+        {
+            "parameters": {
+                "options": {}
+            },
+            "id": "0dd7dadf-2717-4007-a742-9998ee3e6102",
+            "name": "Scraper agent",
+            "type": "@n8n/n8n-nodes-langchain.agent",
+            "position": [
+                1088,
+                800
+            ],
+            "typeVersion": 1.9
+        },
+        {
+            "parameters": {
+                "resource": "Actors",
+                "operation": "Run actor"
+            },
+            "id": "9c085020-8c37-4a84-9c03-3fdaa3465618",
+            "name": "Run an Actor",
+            "type": "@apify/n8n-nodes-preview-apify.apify",
+            "position": [
+                1888,
+                896
+            ],
+            "typeVersion": 1
+        },
+        {
+            "parameters": {},
+            "id": "21ea0d06-213a-4a70-9e1d-00281ded2bbe",
+            "name": "Limit3",
+            "type": "n8n-nodes-base.limit",
+            "position": [
+                3232,
+                896
+            ],
+            "typeVersion": 1
+        },
+        {
+            "parameters": {},
+            "id": "0eeea79a-890f-413e-a2e9-742edf5369fb",
+            "name": "Structured Output Parser1",
+            "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+            "position": [
+                64,
+                1128
+            ],
+            "typeVersion": 1.2
+        },
+        {
+            "parameters": {
+                "pollTimes": {
+                    "item": [
+                        {
+                            "mode": "everyMinute"
+                        }
+                    ]
+                },
+                "filters": {}
+            },
+            "id": "3096eab7-a0fb-4235-853d-e13696edc21a",
+            "name": "Gmail Trigger",
+            "type": "n8n-nodes-base.gmailTrigger",
+            "position": [
+                64,
+                4044
+            ],
+            "typeVersion": 1.2
+        },
+        {
+            "parameters": {
+                "options": {}
+            },
+            "id": "c700feee-7357-47ef-8617-141c6167bdfd",
+            "name": "Get a message",
+            "type": "n8n-nodes-base.gmail",
+            "position": [
+                1184,
+                4044
+            ],
+            "webhookId": "[REDACTED_WEBHOOK_ID]",
+            "typeVersion": 2.1
+        },
+        {
+            "parameters": {
+                "schema": {
+                    "__rl": true,
+                    "mode": "list",
+                    "value": "public"
+                },
+                "table": {
+                    "__rl": true,
+                    "mode": "list",
+                    "value": ""
+                }
+            },
+            "id": "6cae241a-0f6b-4cef-95ce-0d6d0e71aba0",
+            "name": "Execute a SQL query",
+            "type": "n8n-nodes-base.postgres",
+            "position": [
+                512,
+                4044
+            ],
+            "typeVersion": 2.6
+        },
+        {
+            "parameters": {
+                "schema": {
+                    "__rl": true,
+                    "mode": "list",
+                    "value": "public"
+                },
+                "table": {
+                    "__rl": true,
+                    "mode": "list",
+                    "value": ""
+                }
+            },
+            "id": "63cf0def-9d35-42fd-83bd-7a395226cb83",
+            "name": "Set replied = Yes ",
+            "type": "n8n-nodes-base.postgres",
+            "position": [
+                960,
+                4044
+            ],
+            "typeVersion": 2.6
+        },
+        {
+            "parameters": {
+                "options": {}
+            },
+            "id": "ee5d218f-bde5-4b7b-ac83-39fa499896dd",
+            "name": "Only from email campaigns",
+            "type": "n8n-nodes-base.filter",
+            "position": [
+                736,
+                4044
+            ],
+            "typeVersion": 2.2
+        },
+        {
+            "parameters": {},
+            "id": "c12d2afa-f6f1-4b07-9247-23e60c6c7c06",
+            "name": "extract email",
+            "type": "n8n-nodes-base.code",
+            "position": [
+                288,
+                4044
+            ],
+            "typeVersion": 2
+        },
+        {
+            "parameters": {
+                "options": {}
+            },
+            "id": "7a5ac8c7-4877-40bd-9b47-c7ed85542e3b",
+            "name": "Get Email History",
+            "type": "n8n-nodes-base.gmailTool",
+            "position": [
+                1536,
+                4268
+            ],
+            "webhookId": "REPLACE_WITH_WEBHOOK_ID",
+            "typeVersion": 2.1
+        },
+        {
+            "parameters": {
+                "options": {}
+            },
+            "id": "01f8677b-09dc-4d39-b3a9-251e716ba421",
+            "name": "Check Sent History",
+            "type": "n8n-nodes-base.gmailTool",
+            "position": [
+                1664,
+                4268
+            ],
+            "webhookId": "REPLACE_WITH_WEBHOOK_ID",
+            "typeVersion": 2.1
+        },
+        {
+            "parameters": {},
+            "id": "618b6a11-20d0-4c67-aee3-57d98f29c5b5",
+            "name": "Email Response Parser",
+            "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+            "position": [
+                64,
+                4372
+            ],
+            "typeVersion": 1.2
+        },
+        {
+            "parameters": {
+                "options": {}
+            },
+            "id": "e6980e32-0371-4f35-a935-2de08dfc228a",
+            "name": "Professional Email Response Agent",
+            "type": "@n8n/n8n-nodes-langchain.agent",
+            "position": [
+                1464,
+                4044
+            ],
+            "typeVersion": 1.9
+        },
+        {
+            "parameters": {
+                "options": {}
+            },
+            "id": "8425d282-69e5-48ff-91d1-9e1bbf7c762b",
+            "name": "Create Draft Response",
+            "type": "n8n-nodes-base.gmail",
+            "position": [
+                1872,
+                4044
+            ],
+            "webhookId": "REPLACE_WITH_WEBHOOK_ID",
+            "typeVersion": 2.1
+        },
+        {
+            "parameters": {
+                "model": {
+                    "__rl": true,
+                    "mode": "list",
+                    "value": "claude-sonnet-4-5-20250929",
+                    "cachedResultName": "Claude Sonnet 4.5"
+                },
+                "options": {}
+            },
+            "id": "fc13c860-0581-44fd-a06c-0a96fb0d00db",
+            "name": "Anthropic Chat Model1",
+            "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+            "position": [
+                1408,
+                4268
+            ],
+            "typeVersion": 1.3
+        }
+    ],
+    "connections": {
+        "Limit": {
+            "main": [
+                [
+                    {
+                        "node": "Merge",
+                        "type": "main",
+                        "index": 1
+                    },
+                    {
+                        "node": "research about company",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Merge": {
+            "main": [
+                [
+                    {
+                        "node": "Time Zone",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Time Zone": {
+            "main": [
+                [
+                    {
+                        "node": "Sender Email",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Sender Email": {
+            "main": [
+                [
+                    {
+                        "node": "Your leads table",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Switch": {
+            "main": [
+                [
+                    {
+                        "node": "Loop Over Items",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Loop Over Items": {
+            "main": [
+                [
+                    {
+                        "node": "Supabase3",
+                        "type": "main",
+                        "index": 0
+                    }
+                ],
+                [
+                    {
+                        "node": "Mailgun1",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Wait": {
+            "main": [
+                [
+                    {
+                        "node": "Loop Over Items",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Loop Over Items1": {
+            "main": [
+                [
+                    {
+                        "node": "Supabase4",
+                        "type": "main",
+                        "index": 0
+                    }
+                ],
+                [
+                    {
+                        "node": "Mailgun",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Wait1": {
+            "main": [
+                [
+                    {
+                        "node": "Loop Over Items1",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Schedule Trigger1": {
+            "main": [
+                [
+                    {
+                        "node": "Supabase2",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "If3": {
+            "main": [
+                [
+                    {
+                        "node": "Sort1",
+                        "type": "main",
+                        "index": 0
+                    }
+                ],
+                [
+                    {
+                        "node": "No Operation, do nothing",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Mailgun": {
+            "main": [
+                [
+                    {
+                        "node": "Wait1",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Mailgun1": {
+            "main": [
+                [
+                    {
+                        "node": "Wait",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "General anlysis": {
+            "main": [
+                [
+                    {
+                        "node": "create email sequence",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Limit1": {
+            "main": [
+                [
+                    {
+                        "node": "Switch",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "OpenAI Chat Model": {
+            "ai_languageModel": [
+                [
+                    {
+                        "node": "create email sequence",
+                        "type": "ai_languageModel",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Supabase2": {
+            "main": [
+                [
+                    {
+                        "node": "Sort2",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "If2": {
+            "main": [
+                [
+                    {
+                        "node": "Limit1",
+                        "type": "main",
+                        "index": 0
+                    }
+                ],
+                [
+                    {
+                        "node": "No Operation, do nothing2",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Code": {
+            "main": [
+                [
+                    {
+                        "node": "Merge",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Schedule Trigger3": {
+            "main": [
+                [
+                    {
+                        "node": "Get many rows",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Supabase11": {
+            "main": [
+                [
+                    {
+                        "node": "Evualute when the mail was sent",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "If1": {
+            "main": [
+                [
+                    {
+                        "node": "Sort",
+                        "type": "main",
+                        "index": 0
+                    }
+                ],
+                [
+                    {
+                        "node": "No Operation, do nothing1",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Evualute when the mail was sent": {
+            "main": [
+                [
+                    {
+                        "node": "If1",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Sort": {
+            "main": [
+                [
+                    {
+                        "node": "Limit2",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Sort1": {
+            "main": [
+                [
+                    {
+                        "node": "Limit",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Sort2": {
+            "main": [
+                [
+                    {
+                        "node": "If2",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Limit2": {
+            "main": [
+                [
+                    {
+                        "node": "Switch5",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Switch5": {
+            "main": [
+                [
+                    {
+                        "node": "Loop Over Items7",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Loop Over Items7": {
+            "main": [
+                [
+                    {
+                        "node": "Supabase12",
+                        "type": "main",
+                        "index": 0
+                    }
+                ],
+                [
+                    {
+                        "node": "Mailgun7",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Wait7": {
+            "main": [
+                [
+                    {
+                        "node": "Loop Over Items7",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Loop Over Items10": {
+            "main": [
+                [
+                    {
+                        "node": "Supabase14",
+                        "type": "main",
+                        "index": 0
+                    }
+                ],
+                [
+                    {
+                        "node": "Mailgun6",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Wait10": {
+            "main": [
+                [
+                    {
+                        "node": "Loop Over Items10",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Mailgun6": {
+            "main": [
+                [
+                    {
+                        "node": "Wait10",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Mailgun7": {
+            "main": [
+                [
+                    {
+                        "node": "Wait7",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Schedule Trigger4": {
+            "main": [
+                [
+                    {
+                        "node": "Supabase11",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Supabase13": {
+            "main": [
+                [
+                    {
+                        "node": "Evualute when the mail was sent1",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "If": {
+            "main": [
+                [
+                    {
+                        "node": "Sort3",
+                        "type": "main",
+                        "index": 0
+                    }
+                ],
+                [
+                    {
+                        "node": "No Operation, do nothing4",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Evualute when the mail was sent1": {
+            "main": [
+                [
+                    {
+                        "node": "If",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Sort3": {
+            "main": [
+                [
+                    {
+                        "node": "Limit4",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Limit4": {
+            "main": [
+                [
+                    {
+                        "node": "Switch6",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Switch6": {
+            "main": [
+                [
+                    {
+                        "node": "Loop Over Items8",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Loop Over Items8": {
+            "main": [
+                [
+                    {
+                        "node": "Supabase15",
+                        "type": "main",
+                        "index": 0
+                    }
+                ],
+                [
+                    {
+                        "node": "Mailgun9",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Wait8": {
+            "main": [
+                [
+                    {
+                        "node": "Loop Over Items8",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Loop Over Items11": {
+            "main": [
+                [
+                    {
+                        "node": "Supabase16",
+                        "type": "main",
+                        "index": 0
+                    }
+                ],
+                [
+                    {
+                        "node": "Mailgun8",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Wait11": {
+            "main": [
+                [
+                    {
+                        "node": "Loop Over Items11",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Mailgun8": {
+            "main": [
+                [
+                    {
+                        "node": "Wait11",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Mailgun9": {
+            "main": [
+                [
+                    {
+                        "node": "Wait8",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Schedule Trigger6": {
+            "main": [
+                [
+                    {
+                        "node": "Supabase13",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "research about company": {
+            "main": [
+                [
+                    {
+                        "node": "General anlysis",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "create email sequence": {
+            "main": [
+                [
+                    {
+                        "node": "Code",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Get many rows": {
+            "main": [
+                [
+                    {
+                        "node": "If3",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Create URL": {
+            "main": [
+                [
+                    {
+                        "node": "Run an Actor",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Extract Info": {
+            "main": [
+                [
+                    {
+                        "node": "Only Keep Verified Emails ",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Only Keep Verified Emails ": {
+            "main": [
+                [
+                    {
+                        "node": "Keep only the new leads",
+                        "type": "main",
+                        "index": 1
+                    }
+                ]
+            ]
+        },
+        "Download File1": {
+            "main": [
+                [
+                    {
+                        "node": "Transcribe1",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Transcribe1": {
+            "main": [
+                [
+                    {
+                        "node": "Scraper agent",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Text1": {
+            "main": [
+                [
+                    {
+                        "node": "Scraper agent",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Voice or Text1": {
+            "main": [
+                [
+                    {
+                        "node": "Download File1",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "OpenAI Chat Model1": {
+            "ai_languageModel": [
+                [
+                    {
+                        "node": "Scraper agent",
+                        "type": "ai_languageModel",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Simple Memory": {
+            "ai_memory": [
+                [
+                    {
+                        "node": "Scraper agent",
+                        "type": "ai_memory",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Select already scraped mails": {
+            "main": [
+                [
+                    {
+                        "node": "Keep only the new leads",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Keep only the new leads": {
+            "main": [
+                [
+                    {
+                        "node": "Already scraped",
+                        "type": "main",
+                        "index": 0
+                    }
+                ],
+                [
+                    {
+                        "node": "Already scraped",
+                        "type": "main",
+                        "index": 0
+                    }
+                ],
+                [
+                    {
+                        "node": "Already scraped",
+                        "type": "main",
+                        "index": 0
+                    }
+                ],
+                [
+                    {
+                        "node": "Create rows with new leads",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Create rows with new leads": {
+            "main": [
+                [
+                    {
+                        "node": "Set Telegram message",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Set Telegram message": {
+            "main": [
+                [
+                    {
+                        "node": "Limit3",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "User message": {
+            "main": [
+                [
+                    {
+                        "node": "Voice or Text1",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Generate query payload": {
+            "main": [
+                [
+                    {
+                        "node": "Create URL",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Scraper agent": {
+            "main": [
+                [
+                    {
+                        "node": "Generate query payload",
+                        "type": "main",
+                        "index": 0
+                    },
+                    {
+                        "node": "Select already scraped mails",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Run an Actor": {
+            "main": [
+                [
+                    {
+                        "node": "Extract Info",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Limit3": {
+            "main": [
+                [
+                    {
+                        "node": "Confirmation message",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Gmail Trigger": {
+            "main": [
+                [
+                    {
+                        "node": "extract email",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Get a message": {
+            "main": [
+                [
+                    {
+                        "node": "Professional Email Response Agent",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Execute a SQL query": {
+            "main": [
+                [
+                    {
+                        "node": "Only from email campaigns",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Set replied = Yes ": {
+            "main": [
+                [
+                    {
+                        "node": "Get a message",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Only from email campaigns": {
+            "main": [
+                [
+                    {
+                        "node": "Set replied = Yes ",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "extract email": {
+            "main": [
+                [
+                    {
+                        "node": "Execute a SQL query",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Get Email History": {
+            "ai_tool": [
+                [
+                    {
+                        "node": "Professional Email Response Agent",
+                        "type": "ai_tool",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Check Sent History": {
+            "ai_tool": [
+                [
+                    {
+                        "node": "Professional Email Response Agent",
+                        "type": "ai_tool",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Professional Email Response Agent": {
+            "main": [
+                [
+                    {
+                        "node": "Create Draft Response",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Anthropic Chat Model1": {
+            "ai_languageModel": [
+                [
+                    {
+                        "node": "Professional Email Response Agent",
+                        "type": "ai_languageModel",
+                        "index": 0
+                    }
+                ]
+            ]
+        }
+    },
+    "pinData": {},
+    "meta": {
+        "instanceId": "e17fe60a6fc90b131a908e42d1e084f269b048e7f20036ff326aabef97ffcabf"
+    }
+}

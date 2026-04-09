@@ -1,0 +1,654 @@
+{
+  "name": "image,gen-free",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=name the product,description and\nmake {{ $json.candidates }} professional and humanify",
+        "hasOutputParser": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        -944,
+        416
+      ],
+      "id": "97aa5eae-56a5-4d65-8715-4e3677433824",
+      "name": "AI Agent",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -880,
+        640
+      ],
+      "id": "49977040-1c03-49a9-99c3-a1c25f1f412a",
+      "name": "Google Gemini Chat Model",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.0-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.0-flash"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Generate an SEO-optimized product listing for \"{{ $json.candidates[0].content.parts[0].text }}\". \n\nRequirements:\n- A compelling, keyword-rich Title (under 70 characters).\n- A 150–200 word Product Description highlighting unique features, benefits, and use-cases. \n- A set of 10–15 relevant SEO Tags/Keywords with high search intent.\n\nFormatting Rules:\n- Do NOT use Markdown, bullet points, hashtags (#), asterisks (*), or line break symbols (\\n).\n- Output should be in plain text, with sections labeled clearly as:\n  Title: \n  Description: \n  Tags: \n- Ensure the style is professional, persuasive, and optimized for platforms like Amazon, Flipkart, or Shopify.\n"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        -336,
+        480
+      ],
+      "id": "8d653095-c6be-432b-9a8f-6a8245992974",
+      "name": "Message a model",
+      "retryOnFail": true
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "documentId": {
+          "__rl": true,
+          "value": "1HLnSJq3WF-6qXs6yk6WwX5e9gcT-tlHhuWttlIjGPc8",
+          "mode": "list",
+          "cachedResultName": "iamage",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1HLnSJq3WF-6qXs6yk6WwX5e9gcT-tlHhuWttlIjGPc8/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1683037537,
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1HLnSJq3WF-6qXs6yk6WwX5e9gcT-tlHhuWttlIjGPc8/edit#gid=1683037537"
+        },
+        "event": "rowUpdate",
+        "includeInOutput": "both",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1888,
+        208
+      ],
+      "id": "b252c93a-dc46-44e9-9de1-8320394f5ab1",
+      "name": "Google Sheets Trigger",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "operation": "analyze",
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash"
+        },
+        "text": "{{You are a professional image analyst. Carefully examine the provided image and give a structured report with these sections:\n\n1. **Basic Description** – Describe what the image shows in objective terms.  \n2. **Visual Quality** – Evaluate clarity, resolution, lighting, color balance, and framing.  \n3. **Design/Composition** – Comment on layout, symmetry, contrast, focus, and use of space.  \n4. **Branding & Messaging** – Identify logos, text, or brand cues, and infer what message is conveyed.  \n5. **Product/Subject Analysis** – If it’s a product, assess presentation, appeal, and professionalism.  \n6. **Improvements** – Suggest enhancements to make the image more effective (for ads, catalogues, or professional use).  \n7. **Overall Assessment** – Rate how professional the image looks on a scale of 1–10 and justify.  \n\nAlways use precise, professional terminology. Avoid guessing details you cannot see.}}",
+        "imageUrls": "={{ $json['Product Image Link'] }",
+        "simplify": false,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        -1280,
+        176
+      ],
+      "id": "2db5e618-8a3d-4b36-a690-26eb70402bb4",
+      "name": "Analyze image1"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={\n  \"ad_prompt_generator\": {\n    \"role\": \"You are a highly experienced AI marketing expert, specializing in visual ad creation. Your task is to analyze a product description and generate a professional, targeted prompt for an image-generation AI.\",\n    \"task_details\": \"Analyze the[{{ $json.content.parts[0].text }}], key features, and brand aesthetic to craft a visually compelling and contextually relevant image prompt. The final prompt must be ready for use by an image-generation model.\",\n    \"input_fields\": {\n      \"product_name\": \"[Insert the product name here, e.g., 'Eco-friendly Smart Water Bottle']\",\n      \"product_type\": \"[Specify the product category, e.g., 'beverage', 'tech gadget', 'gourmet food', 'skincare'. This is crucial for determining the aesthetic.]\",\n      \"detailed_description\": \"[Provide a detailed description of the product, including materials, unique design elements, and primary colors.]\",\n      \"user_benefits_and_usp\": \"[Summarize 2-3 key benefits for the user and the product's unique selling proposition in a concise phrase.]\"\n    },\n    \"output_requirements\": {\n      \"image_prompt\": {\n        \"visual_style\": \"Professional, clean, and minimalist. The focus is squarely on the product. Use a background and color palette that is cohesive with the product's design. Avoid any irrelevant elements.\",\n        \"contextual_aesthetic\": \"Based on the product type, include subtle, context-rich details to enhance its appeal. For example, show a faint mist or steam for hot food, subtle condensation or water droplets for a cold beverage, or a soft, radiant glow for a tech product.\",\n        \"composition\": \"The product should be the central subject, placed in a way that highlights its form and function. Consider dynamic angles that make the product look premium and desirable.\",\n        \"messaging_element\": \"Integrate a short, impactful text overlay or tagline that highlights the core user benefit.\"\n      }\n    }\n  }\n}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "={\n  \"product_marketing_prompt_generator\": {\n    \"role\": \"You are a seasoned AI expert in product marketing with over 20 years of experience. Your task is to analyze a [{{ $json.content.parts[0].text }}] prompt tailored for an image-generation AI.\",\n    \"task_description\": \"Analyze the provided product details and benefits to craft an ad image prompt that is professional, visually striking, and directly communicates the product's value to the consumer,IT SHOULD BE IN JSON FORMATE.\",\n    \"input_fields\": {\n      \"product_description\": \"[{{ $json.content.parts[0].text }}]\",\n      \"key_benefits\": \"[List the 2-3 most significant benefits for the end-user. Focus on the 'why' they should buy it, in a concise format.]\",\n      \"product_colors\": \"[Specify the primary colors of the product. This helps in creating a matching or complementary background.]\"\n    },\n    \"output_requirements\": {'JSON PROMPT'\n      \"aesthetic_guidelines\": \"The visual aesthetic must be contextually relevant to the product. For example, if the product is a beverage bottle, include water droplets and a fresh, clean background. If it's a food item, a subtle steam effect is required. These details should enhance, not distract from, the product.\",\n      \"visual_focus\": \"The image should be professional and minimalist, with the product as the undisputed focal point. Avoid irrelevant objects and maintain a clean, uncluttered composition.\",\n      \"background_design\": \"The background must be professional and sophisticated, with a color palette that either matches or complements the product's description or colors, ensuring visual harmony.\",\n      \"messaging\": \"The final prompt should contain a short, powerful phrase that encapsulates the product's main benefit for the consumer.\"\n[don't add unnecccery statments]\n    }\n  }\n}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "a51c395b-2895-479a-8541-a934ef9b6039",
+      "name": "AI Agent1"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"prompt\": \"Create a modern product advertisement design with a clean, minimal, and premium look. The layout must stay consistent:\\n1. Main large product image centered.\\n2. A zoomed-in or angled detail image placed on the left side.\\n3. Neutral gradient or solid background (dark gray, white, or muted tones).\\n4. Product name displayed in bold, large text across the background.\\n5. A price section at bottom left with a 'Buy Now' button.\\n6. A product category or feature tag displayed near the product name.\\n7. Rounded corners and smooth edges on all containers.\\n\\nThe design must remain reusable for any product by simply changing the variables.\",\n  \"variables\": {\n    \"product_name\": \"<Product Name>\",\n    \"product_category\": \"<Category or Feature>\",\n    \"price\": \"<Price Value>\",\n    \"button_text\": \"<CTA Text>\",\n    \"background_style\": \"<Background Gradient or Color>\",\n    \"main_product_image\": \"<Main Product Image Path/URL>\",\n    \"detail_image\": \"<Secondary/Detail Image Path/URL>\"\n  }\n}",
+        "autoFix": true
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        96,
+        224
+      ],
+      "id": "cfe5c63e-7773-4922-8120-1cf3b7c2b930",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "model": "deepseek/deepseek-r1-0528-qwen3-8b:free",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        176,
+        432
+      ],
+      "id": "6ad055e4-c63b-410d-acce-d642192b462d",
+      "name": "OpenRouter Chat Model1"
+    },
+    {
+      "parameters": {
+        "operation": "toJson",
+        "mode": "each",
+        "binaryPropertyName": "output",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        1136,
+        112
+      ],
+      "id": "d21cc99d-6334-4453-b245-ba89eed8a0b7",
+      "name": "Convert to File"
+    },
+    {
+      "parameters": {
+        "operation": "toJson",
+        "mode": "each",
+        "binaryPropertyName": "output",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        96,
+        608
+      ],
+      "id": "c0b08a04-6a51-48da-8d0f-26ed48f073f6",
+      "name": "Convert to File1"
+    },
+    {
+      "parameters": {
+        "resource": "fileFolder",
+        "filter": {},
+        "options": {}
+      },
+      "id": "d1e52093-61bf-46e8-ad48-0897f1d4b616",
+      "name": "descriptio",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        464,
+        608
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// n8n Code Node\nreturn items.map(item => {\n  let raw = item.json.output || item.json; \n\n  if (typeof raw === \"string\") {\n    // Remove markdown fences (```json ... ```)\n    raw = raw.replace(/```json|```/g, \"\").trim();\n\n    // Try to parse the JSON string\n    try {\n      raw = JSON.parse(raw);\n    } catch (e) {\n      raw = { error: \"Invalid JSON\", raw: raw };\n    }\n  }\n\n  return { json: raw };\n});\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        464,
+        208
+      ],
+      "id": "f6367259-bded-48ba-abd1-30b31f9569ff",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Remove unwanted fields, keep only input_fields + output_requirements\nreturn [{\n  input_fields:$input.first().json.raw\n  output_requirements: $input.first().json.product_marketing_prompt_generator.output_requirements\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        688,
+        304
+      ],
+      "id": "1854c772-ff34-49ac-bd74-ddbc5407d5cd",
+      "name": "Code1",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a3e8124a-8349-4266-9626-399e83b0ebf0",
+              "name": "prompt",
+              "value": "={{ $('Code').item.json.prompt ,$('Code').item.json.variables }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        912,
+        304
+      ],
+      "id": "53272c05-3edd-4b75-b14e-1e1f11053fd0",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "url": "=https://image.pollinations.ai/prompt/{{ $json.prompt }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1056,
+        320
+      ],
+      "id": "368d16eb-d186-4e54-8bc6-798ad0049e52",
+      "name": "HTTP Request1"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.5-flash-lite",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -32,
+        224
+      ],
+      "id": "15b2ca6a-166a-4ac3-872a-76b20f5b37df",
+      "name": "Google Gemini Chat Model1"
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "operation": "analyze",
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-flash",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-flash"
+        },
+        "text": "{{You are a professional image analyst. Carefully examine the provided image and give a structured report with these sections:\n\n1. **Basic Description** – Describe what the image shows in objective terms.  \n2. **Visual Quality** – Evaluate clarity, resolution, lighting, color balance, and framing.  \n3. **Design/Composition** – Comment on layout, symmetry, contrast, focus, and use of space.  \n4. **Branding & Messaging** – Identify logos, text, or brand cues, and infer what message is conveyed.  \n5. **Product/Subject Analysis** – If it’s a product, assess presentation, appeal, and professionalism.  \n6. **Improvements** – Suggest enhancements to make the image more effective (for ads, catalogues, or professional use).  \n7. **Overall Assessment** – Rate how professional the image looks on a scale of 1–10 and justify.  \n\nAlways use precise, professional terminology. Avoid guessing details you cannot see.}}",
+        "imageUrls": "={{ $json.thumbnailLink }}",
+        "simplify": false,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        -1344,
+        592
+      ],
+      "id": "204bd786-fdde-43e8-8715-d4e5a87febb6",
+      "name": "Analyze image"
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "triggerOn": "specificFolder",
+        "folderToWatch": {
+          "__rl": true,
+          "value": "1f-qu6syYoQVtjA1zmla5J3WR2J-cMLRv",
+          "mode": "list",
+          "cachedResultName": "gtfe",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1f-qu6syYoQVtjA1zmla5J3WR2J-cMLRv"
+        },
+        "event": "fileCreated",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDriveTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1840,
+        576
+      ],
+      "id": "07670278-d3ec-448d-b85a-42abfdabc52e",
+      "name": "Google Drive Trigger"
+    },
+    {
+      "parameters": {
+        "amount": 15
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        -592,
+        416
+      ],
+      "id": "e625dfdd-c503-48a7-a1c2-c9c79b2f079e",
+      "name": "Wait",
+      "webhookId": "66155649-7083-4e52-81f9-385a9aceccfc"
+    },
+    {
+      "parameters": {
+        "name": "ad",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1f-qu6syYoQVtjA1zmla5J3WR2J-cMLRv",
+          "mode": "list",
+          "cachedResultName": "gtfe",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1f-qu6syYoQVtjA1zmla5J3WR2J-cMLRv"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1328,
+        544
+      ],
+      "id": "f3f08125-84a6-4277-a55d-c129fa086058",
+      "name": "Upload file1"
+    },
+    {
+      "parameters": {
+        "operation": "toText",
+        "sourceProperty": "data",
+        "binaryPropertyName": "ad",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        1184,
+        544
+      ],
+      "id": "1e32dcba-3d26-45c2-b20e-64bc983fa622",
+      "name": "Convert to File2",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "inputDataFieldName": "output",
+        "name": "ad",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "root",
+          "cachedResultName": "/ (Root folder)"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1392,
+        192
+      ],
+      "id": "5e5479a4-e940-4393-a366-4201fcd37cce",
+      "name": "Upload file"
+    }
+  ],
+  "connections": {
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Convert to File1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze image1": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Structured Output Parser",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "Upload file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File1": {
+      "main": [
+        [
+          {
+            "node": "descriptio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "Convert to File2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze image": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Drive Trigger": {
+      "main": [
+        [
+          {
+            "node": "Analyze image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File2": {
+      "main": [
+        [
+          {
+            "node": "Upload file1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "pinData": {},
+  "triggerCount": 0,
+  "meta": null
+}

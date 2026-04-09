@@ -1,0 +1,308 @@
+{
+  "name": "HEALTH",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "a9211f6c-9e8a-4b15-a89c-1b7bb61e21f9",
+      "name": "Cron Trigger (Daily)",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [
+        -672,
+        -64
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=guidelines&retmode=json",
+        "options": {}
+      },
+      "id": "86c32aa1-4708-42a5-a2b9-d4bcdae2471c",
+      "name": "Agent – PubMed Collector",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        -448,
+        -272
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://www.who.int/feeds/entity/mediacentre/news/en/rss.xml",
+        "options": {}
+      },
+      "id": "48a385f5-eeb7-4d73-a8ef-74d0eb8c0e1c",
+      "name": "Agent – WHO RSS Collector",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1,
+      "position": [
+        -448,
+        -96
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://example.com/health-news",
+        "responseFormat": "string",
+        "options": {}
+      },
+      "id": "9636b1e4-da25-4e8c-b0cc-0b3a456c538c",
+      "name": "Agent – Competitor Scraper",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        -448,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "const seen = new Set();\nreturn items.filter(item => {\n  const key = (item.json.title || '') + (item.json.date || '');\n  if (seen.has(key)) return false;\n  seen.add(key);\n  return true;\n});"
+      },
+      "id": "5f451ba9-3f0d-4774-bd14-da0028ebea1e",
+      "name": "Data Cleaner & Deduplicator",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        -176,
+        -272
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "const chunkSize = 1000;\nlet newItems = [];\nfor (const item of items) {\n  const text = item.json.summary || '';\n  for (let i = 0; i < text.length; i += chunkSize) {\n    newItems.push({ json: { ...item.json, chunk: text.slice(i, i+chunkSize) }});\n  }\n}\nreturn newItems;"
+      },
+      "id": "470bb9bd-3fa0-4f40-984d-f5b13028eb67",
+      "name": "Chunk Abstracts",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        -192,
+        -80
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "completion",
+        "requestOptions": {}
+      },
+      "id": "3c54ae17-2b38-4343-a8fe-ca74eb9e3db6",
+      "name": "Agent – Keyword Extractor (NER)",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1,
+      "position": [
+        16,
+        -272
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": null,
+          "name": "OpenAI API Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "let score = 1; const title=(item.json.title||'').toLowerCase(); if(title.includes('approval')||title.includes('fda'))score=5; else if(title.includes('guideline'))score=4; else if(title.includes('trial'))score=3; else if(title.includes('update'))score=2; return[{json:{...item.json,priority:score}}];"
+      },
+      "id": "9aa37532-659f-4e3d-8bb2-debcc07838c0",
+      "name": "Agent – Priority Scorer",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        16,
+        -80
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "https://api-inference.huggingface.co/models/facebook/bart-large-cnn",
+        "jsonParameters": true,
+        "options": {}
+      },
+      "id": "7b905de6-8bd1-49a3-82d7-6f7b18f157c3",
+      "name": "Agent – HuggingFace Summarizer",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        96,
+        64
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": null,
+          "name": "HuggingFace API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "completion",
+        "requestOptions": {}
+      },
+      "id": "ffd7ccd0-edef-4311-ad5b-ec8b50340be6",
+      "name": "Agent – OpenAI Summarizer",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1,
+      "position": [
+        -144,
+        224
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": null,
+          "name": "OpenAI API Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "sheetId": "your-google-sheet-id",
+        "range": "Sheet1!A:F",
+        "options": {}
+      },
+      "id": "3ea6111c-79f2-488d-bba8-c737c781768e",
+      "name": "Save to Google Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 2,
+      "position": [
+        272,
+        -208
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "send"
+      },
+      "id": "cdfeed4d-a75d-4b30-9d16-b5041562e794",
+      "name": "Agent – Gmail Digest",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 1,
+      "position": [
+        288,
+        -16
+      ],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": null,
+          "name": "Gmail Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "https://graph.facebook.com/v17.0/your-whatsapp-number-id/messages",
+        "options": {}
+      },
+      "id": "e80dc35b-3c7c-4467-8a6e-8eed56802b49",
+      "name": "Agent – WhatsApp Digest",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [
+        512,
+        -208
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": null,
+          "name": "WhatsApp Cloud API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "your-telegram-chat-id",
+        "text": "Fallback Digest: {{$json[\"title\"]}} {{$json[\"link\"]}}",
+        "additionalFields": {}
+      },
+      "id": "6b9c7f95-4460-45e7-9595-0863d799a803",
+      "name": "Agent – Telegram Fallback",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        512,
+        0
+      ],
+      "webhookId": "ea3426c0-974f-4b14-b55d-47e05b305df4",
+      "credentials": {
+        "telegramApi": {
+          "id": null,
+          "name": "Telegram Bot API"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "b7970b3b-9703-4a49-9c6e-81caabbf5aa9",
+      "name": "Generate PDF Digest",
+      "type": "n8n-nodes-base.pdf",
+      "typeVersion": 1,
+      "position": [
+        352,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$json[\"title\"]}}",
+              "operation": "isEmpty"
+            }
+          ]
+        }
+      },
+      "id": "6af21ca2-79db-45d8-82d2-a9b1e97f5f5b",
+      "name": "IF Node – Data Check",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        -208,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "sheetId": "your-google-sheet-id",
+        "range": "Errors!A:C",
+        "options": {}
+      },
+      "id": "6c2df193-e44d-4578-ac28-cbd095f2fee6",
+      "name": "Error Logger",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 2,
+      "position": [
+        528,
+        192
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "const data={}; for(const item of items){ const cat=item.json.category||'Other'; data[cat]=(data[cat]||0)+1; } return[{json:{weekly_trends:data}}];"
+      },
+      "id": "c589e7ab-9218-4cd7-8976-bfb53d8265bf",
+      "name": "Weekly Trend Analyzer",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        64,
+        224
+      ]
+    }
+  ],
+  "connections": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "pinData": {},
+  "triggerCount": 0,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  }
+}

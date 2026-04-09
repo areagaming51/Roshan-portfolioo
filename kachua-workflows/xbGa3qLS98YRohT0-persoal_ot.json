@@ -1,0 +1,1251 @@
+{
+  "name": "persoal.ot",
+  "nodes": [
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Listen for incoming events').first().json.message.from.id }}"
+      },
+      "id": "3e18f069-aadc-437b-ac57-fbf8c937f8fe",
+      "name": "Window Buffer Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "position": [
+        1824,
+        -960
+      ],
+      "typeVersion": 1.2
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "filters": {
+          "labelIds": "={{ [\"INBOX\",\"UNREAD\"] }}",
+          "readStatus": "both",
+          "receivedAfter": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Received_After', `the date after which to fetch the messages in format YYYY-MM-DDTHH:MM:SS`, 'string') }}"
+        }
+      },
+      "id": "cf279f7d-a3a5-4abc-8b4e-30414d2fe488",
+      "name": "Get Email",
+      "type": "n8n-nodes-base.gmailTool",
+      "position": [
+        1952,
+        -960
+      ],
+      "typeVersion": 2.1,
+      "webhookId": "7f07632b-1704-4ee5-bcff-a15e55ba6211",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "dYrBLIWsjE2SwbMC",
+          "name": "Gmail account"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "id": "53143a31-db78-4be8-8568-8475758a728a",
+      "name": "Listen for incoming events",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "position": [
+        560,
+        -1152
+      ],
+      "webhookId": "322dce18-f93e-4f86-b9b1-3305519b7834",
+      "typeVersion": 1,
+      "credentials": {
+        "telegramApi": {
+          "id": "0Snz6LcOE4ZBXC6x",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendAudio",
+        "chatId": "={{ $('Listen for incoming events').first().json.message.from.id }}",
+        "binaryData": true,
+        "additionalFields": {
+          "parse_mode": "Markdown"
+        }
+      },
+      "id": "64708905-7cac-444f-8be5-b82e7ccef5fa",
+      "name": "Telegram",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        3040,
+        -1056
+      ],
+      "typeVersion": 1.1,
+      "webhookId": "70ba582c-c263-4a90-8075-9d8eacfc33bc",
+      "credentials": {
+        "telegramApi": {
+          "id": "0Snz6LcOE4ZBXC6x",
+          "name": "Telegram account 2"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "a0bf9719-4272-46f6-ab3b-eda6f7b44fd8",
+              "operator": {
+                "type": "string",
+                "operation": "empty",
+                "singleValue": true
+              },
+              "leftValue": "={{ $json.message.text }}",
+              "rightValue": ""
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "ce71352d-46f0-44a1-b2ce-21879685fe32",
+      "name": "If",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        1008,
+        -1152
+      ],
+      "typeVersion": 2.2
+    },
+    {
+      "parameters": {
+        "fields": {
+          "values": [
+            {
+              "name": "text",
+              "stringValue": "={{ $json?.message?.text || \"\" }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "12dee13e-6c5c-4ce3-8fec-c40f73d001a3",
+      "name": "Voice or Text",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        784,
+        -1152
+      ],
+      "typeVersion": 3.2
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $json.message.audio.file_id }}",
+        "additionalFields": {}
+      },
+      "id": "8f1d82ba-cd5d-4ff4-9846-3f300977a5db",
+      "name": "Get Voice File",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        1232,
+        -1232
+      ],
+      "typeVersion": 1.1,
+      "webhookId": "b562330a-c92d-46eb-ac55-11a3204a7d48",
+      "credentials": {
+        "telegramApi": {
+          "id": "0Snz6LcOE4ZBXC6x",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.sarvam.ai/speech-to-text",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "api-subscription-key",
+              "value": "sk_p1qk5do5_5Zum0hwIgMcNAfs5HXbQpJQH"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "parameterType": "formBinaryData",
+              "name": "file",
+              "inputDataFieldName": "=data"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1456,
+        -1232
+      ],
+      "id": "727fab24-2bfc-4022-b1a7-d982cc4ac3eb",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.text }}",
+        "options": {
+          "systemMessage": "=todays date;{{ $now }}\n\nYou are Jarvis — a smart, witty, and reliable assistant. Speak only in English. Be clear, warm, and playful, but keep replies short and natural, since they may be read aloud with text-to-speech. Never stay silent.\n\nRules:\n\nUse the AI Agent Tool to handle all tasks. It has access to Gmail, Google Calendar, Google Sheets (contacts), and Gemini.\n\nEmails → Send, reply, delete, or list emails using the Agent.\n\nCalendar → Create, update, or delete events using the Agent. Always check for conflicts before scheduling.\n\nContacts → If a user gives only a name, ask for or look up the email with the Agent. Save new ones into Sheets.\n\nReasoning/Text → Use Gemini through the Agent for writing or summarizing\n\nGoogle Tasks → If user asks to add or remind something, create a task in Google Tasks and confirm in one short line.\n\n\nWhatsApp → If asked to send a message, use the WhatsApp tool and confirm in one short line.\n\nCalculator → Use this tool when solving math or calculation queries.\n\nHacker News → Use this tool for latest news or tech updates.\n\nWikipedia → Use this tool for quick knowledge lookups.\n\nStyle → Never say “fetching” or “please wait.” Reply like a helpful friend.\n\nLanguage → Always reply in English, even if user types in Hinglish or Hindi.\n\nAlways Respond → If no data is found, give a friendly short fallback like:\n\n“No new emails today.”\n\n“Your calendar is clear.”\n\n“No pending tasks.”\n\n“Couldn’t send the message — please check the contact.”\n\n✨ Example replies (TTS-friendly):\n\n“Two emails today: Ankit at 10 AM, project update. Priya at 1 PM, client feedback.”\n\n“I’ve added a Google Task: Prepare slides, due tomorrow 10 AM.”\n\n“Your WhatsApp message to Riya has been sent.”\n\n“Today’s schedule: one client call at 3 PM.”\n\n“No tasks due today. You’re all set."
+        }
+      },
+      "id": "7cd8f0eb-1d86-42a9-bbe4-b0a76cc04d5a",
+      "name": "jarvis, AI Assistant 👩🏻‍🏫",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        2144,
+        -1184
+      ],
+      "typeVersion": 1.6,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.sarvam.ai/text-to-speech",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "api-subscription-key",
+              "value": "sk_p1qk5do5_5Zum0hwIgMcNAfs5HXbQpJQH"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "text",
+              "value": "={{ $json.translated_text }}"
+            },
+            {
+              "name": "target_language_code",
+              "value": "bn-IN"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3104,
+        -1248
+      ],
+      "id": "88881666-311b-42c0-812c-e2c54e6e9e1b",
+      "name": "HTTP Request1"
+    },
+    {
+      "parameters": {
+        "jsCode": "const results = [];\n\n$input.all().forEach((item) => {\n  if (item.json.audios) {\n    item.json.audios.forEach((audio) => {\n      results.push({\n        json: {\n          source: \"Sarvam API\",\n        },\n        binary: {\n          data: {\n            data: Buffer.from(audio, \"base64\"),\n            mimeType: audio.format === \"mp3\" ? \"audio/mpeg\" : \"audio/wav\",\n            fileName: `sarvam_output.${audio.format}`,\n          },\n        },\n      });\n    });\n  }\n});\n\nreturn results;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3328,
+        -1248
+      ],
+      "id": "d6516a11-617c-4b32-9125-b711f92a95fa",
+      "name": "Code in JavaScript",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.sarvam.ai/translate",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "api-subscription-key",
+              "value": "sk_p1qk5do5_5Zum0hwIgMcNAfs5HXbQpJQH"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "input",
+              "value": "={{ $json.output }}"
+            },
+            {
+              "name": "source_language_code",
+              "value": "auto"
+            },
+            {
+              "name": "target_language_code",
+              "value": "hi-IN"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2880,
+        -1248
+      ],
+      "id": "f7e6df29-c3a0-4c2a-8144-34222a23bb1f",
+      "name": "HTTP Request2"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Listen for incoming events').first().json.message.from.id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2880,
+        -1440
+      ],
+      "id": "ec21257b-5387-45de-849a-ac8639ea5cbb",
+      "name": "Send a text message",
+      "webhookId": "d27bc85d-ff4c-4c02-8919-7ce46e8d2f30",
+      "credentials": {
+        "telegramApi": {
+          "id": "0Snz6LcOE4ZBXC6x",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "be3a38ca-d876-4c5f-b0b4-c5fe6f25dc4e",
+              "leftValue": "={{ $('Listen for incoming events').item.json.message.text }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        2656,
+        -1344
+      ],
+      "id": "9ef3612e-930b-4238-873e-3c8d5acf660d",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "=713116805229455",
+        "recipientPhoneNumber": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Recipient_s_Phone_Number', ``, 'string') }}",
+        "textBody": "=text",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.whatsAppTool",
+      "typeVersion": 1,
+      "position": [
+        2080,
+        -960
+      ],
+      "id": "ae5ea5d6-e834-4253-ade9-3a0efba9e66f",
+      "name": "Send message in WhatsApp Business Cloud",
+      "webhookId": "1e702396-16f5-45ba-b160-a862e3d026af",
+      "credentials": {
+        "whatsAppApi": {
+          "id": "zDuCHUCXvYME4JnR",
+          "name": "WhatsApp account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "task": "MTgzNjkyMjYyMzg3OTMyNDE4Mzk6MDow",
+        "title": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Title', ``, 'string') }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.googleTasksTool",
+      "typeVersion": 1,
+      "position": [
+        2208,
+        -960
+      ],
+      "id": "43978605-76e3-4316-aca3-b444416e557b",
+      "name": "Create a task in Google Tasks",
+      "credentials": {
+        "googleTasksOAuth2Api": {
+          "id": "qclGe4YUtgOzCbr0",
+          "name": "Google Tasks account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f71a98c3-e686-43ef-a369-1348df4e1245",
+              "name": "text",
+              "value": "={{ $json.transcript }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1680,
+        -1232
+      ],
+      "id": "c994f9a2-f140-4f8d-800a-2bbdf072bba0",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        1696,
+        -960
+      ],
+      "id": "28651a9c-ee84-4058-9d13-4546fb18132e",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "2adWgmMSgbuJMaZn",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('To', ``, 'string') }}",
+        "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', ``, 'string') }}",
+        "emailType": "text",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "947979d8-68d1-481d-a38a-21dc64fcb73c",
+      "name": "Send",
+      "type": "n8n-nodes-base.gmailTool",
+      "position": [
+        1152,
+        -624
+      ],
+      "webhookId": "f82621ed-6e2e-464b-98c4-c81523615c43",
+      "typeVersion": 2.1,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "dYrBLIWsjE2SwbMC",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "reply",
+        "messageId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message_ID', ``, 'string') }}",
+        "emailType": "text",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "165f2be1-ff15-4900-9b06-674ab6c495cb",
+      "name": "Reply",
+      "type": "n8n-nodes-base.gmailTool",
+      "position": [
+        1280,
+        -624
+      ],
+      "webhookId": "f82621ed-6e2e-464b-98c4-c81523615c43",
+      "typeVersion": 2.1,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "dYrBLIWsjE2SwbMC",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "messageId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message_ID', ``, 'string') }}"
+      },
+      "id": "1b9c362f-c109-497d-b8cb-eab73eca9c75",
+      "name": "Delete",
+      "type": "n8n-nodes-base.gmailTool",
+      "position": [
+        1408,
+        -624
+      ],
+      "webhookId": "f82621ed-6e2e-464b-98c4-c81523615c43",
+      "typeVersion": 2.1,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "dYrBLIWsjE2SwbMC",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "returnAll": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Return_All', ``, 'boolean') }}",
+        "simple": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Simplify', ``, 'boolean') }}",
+        "filters": {},
+        "options": {}
+      },
+      "id": "85dc9949-c27a-4c0e-86a2-690374068ec2",
+      "name": "Get Many",
+      "type": "n8n-nodes-base.gmailTool",
+      "position": [
+        1792,
+        -624
+      ],
+      "webhookId": "f82621ed-6e2e-464b-98c4-c81523615c43",
+      "typeVersion": 2.1,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "dYrBLIWsjE2SwbMC",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "c1bff1f8-d116-4deb-96ba-1e4b8500cef2",
+      "name": "Gemini",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "position": [
+        896,
+        -624
+      ],
+      "typeVersion": 1,
+      "credentials": {
+        "googlePalmApi": {
+          "id": "2adWgmMSgbuJMaZn",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "area.gaming.51.op@gmail.com",
+          "mode": "list",
+          "cachedResultName": "area.gaming.51.op@gmail.com"
+        },
+        "start": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Start', ``, 'string') }}",
+        "end": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('End', ``, 'string') }}",
+        "useDefaultReminders": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Use_Default_Reminders', ``, 'boolean') }}",
+        "additionalFields": {
+          "attendees": [
+            "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('attendees0_Attendees', ``, 'string') }}"
+          ],
+          "conferenceDataUi": {},
+          "description": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Description', ``, 'string') }}",
+          "summary": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Summary', ``, 'string') }}"
+        }
+      },
+      "id": "dde58c78-d0a2-4da0-bbad-97f06341b540",
+      "name": "Create Event",
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "position": [
+        2176,
+        -624
+      ],
+      "typeVersion": 1.3,
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "QW5Za3cVSVJLew4Y",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "calendar": {
+          "__rl": true,
+          "value": "area.gaming.51.op@gmail.com",
+          "mode": "list",
+          "cachedResultName": "area.gaming.51.op@gmail.com"
+        },
+        "returnAll": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Return_All', ``, 'boolean') }}",
+        "timeMin": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('After', ``, 'string') }}",
+        "timeMax": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Before', ``, 'string') }}",
+        "options": {}
+      },
+      "id": "eb00401f-76ce-45a6-bfb9-450545c62935",
+      "name": "Get Many2",
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "position": [
+        1920,
+        -624
+      ],
+      "typeVersion": 1.3,
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "QW5Za3cVSVJLew4Y",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "calendar": {
+          "__rl": true,
+          "value": "area.gaming.51.op@gmail.com",
+          "mode": "list",
+          "cachedResultName": "area.gaming.51.op@gmail.com"
+        },
+        "eventId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Event_ID', ``, 'string') }}",
+        "options": {}
+      },
+      "id": "c7a11b1d-0ca4-4f71-929b-c7b7f84cfb3e",
+      "name": "Delete2",
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "position": [
+        1664,
+        -624
+      ],
+      "typeVersion": 1.3,
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "QW5Za3cVSVJLew4Y",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "calendar": {
+          "__rl": true,
+          "value": "area.gaming.51.op@gmail.com",
+          "mode": "list",
+          "cachedResultName": "area.gaming.51.op@gmail.com"
+        },
+        "eventId": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Event_ID', ``, 'string') }}",
+        "useDefaultReminders": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Use_Default_Reminders', ``, 'boolean') }}",
+        "updateFields": {}
+      },
+      "id": "8eca11ef-f563-4b02-b732-82d4d4415664",
+      "name": "Update",
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "position": [
+        1536,
+        -624
+      ],
+      "typeVersion": 1.3,
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "QW5Za3cVSVJLew4Y",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "1UTOyNDNeRJj6nRuladtP61ljeZg6xXK3O1Kn3Dq7t_A",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1UTOyNDNeRJj6nRuladtP61ljeZg6xXK3O1Kn3Dq7t_A/edit?usp=drivesdk",
+          "cachedResultName": "Contact Details"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gid=0",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1UTOyNDNeRJj6nRuladtP61ljeZg6xXK3O1Kn3Dq7t_A/edit#gid=0",
+          "cachedResultName": "Sheet1"
+        },
+        "options": {}
+      },
+      "id": "7003bbef-fc2a-4bb7-8fb9-1cfff896cad7",
+      "name": "Get Contacts",
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "position": [
+        2304,
+        -624
+      ],
+      "typeVersion": 4.6,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ht7YbtWnyRqrJXBY",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "1UTOyNDNeRJj6nRuladtP61ljeZg6xXK3O1Kn3Dq7t_A",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1UTOyNDNeRJj6nRuladtP61ljeZg6xXK3O1Kn3Dq7t_A/edit?usp=drivesdk",
+          "cachedResultName": "Contact Details"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gid=0",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1UTOyNDNeRJj6nRuladtP61ljeZg6xXK3O1Kn3Dq7t_A/edit#gid=0",
+          "cachedResultName": "Sheet1"
+        },
+        "columns": {
+          "value": {
+            "Name": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Name', ``, 'string') }}",
+            "Email Address": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Email_Address', ``, 'string') }}"
+          },
+          "schema": [
+            {
+              "id": "Name",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "Name",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email Address",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "displayName": "Email Address",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "7a406b95-7e39-4ad9-83b0-bf28f10bc241",
+      "name": "Add Contacts",
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "position": [
+        2048,
+        -624
+      ],
+      "typeVersion": 4.6,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "ht7YbtWnyRqrJXBY",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "text": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Prompt__User_Message_', ``, 'string') }}",
+        "options": {
+          "systemMessage": "You are roshan’s Smart Assistant\n\n# Responsibilities:\nHandle Gmail and calendar-related tasks accurately and efficiently using the available tools.\n\n# Instructions:\n## Gmail Tasks:\nFor any Gmail-related request from [Your Name], use the Gmail tools: Send, Reply, Label, Delete, and Get Many.\n\nIf [Your Name] provides only a name without an email address, ask for the email address before proceeding.\n\nAuto-complete any missing information (e.g., links, answers, summaries) when drafting or replying to emails.\n\n## Calendar Tasks:\nIf [Your Name] requests an appointment, use the Calendar tool to schedule it at their preferred time.\n\nBefore scheduling, check for conflicts at the preferred time.\n\nIf a meeting already exists, do not create the appointment. Instead, notify [Your Name] about the conflict.\n\nUse the Date and Time tool to properly interpret dates and times.\n\n## Handling Contacts:\nIf [Your Name] provides only a name to send an email, first check the Google Sheet for their email address.\n\nIf the email is not found, ask [Your Name] to provide it.\n\nOnce received, use the email to send the message and update the Google Sheet by adding the new email alongside the person's name.\n\n# Behavior:\nAlways stay efficient, accurate, and helpful in all tasks and interactions.\n\nPrioritize clarity and speed in executing requests."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agentTool",
+      "typeVersion": 2.2,
+      "position": [
+        1472,
+        -816
+      ],
+      "id": "e39da7e5-d776-42c5-8845-673c2c12c2b7",
+      "name": "AI Agent Tool"
+    },
+    {
+      "parameters": {},
+      "id": "72636b11-a0d5-4449-a2e0-3886a9c356bb",
+      "name": "Calculator",
+      "type": "@n8n/n8n-nodes-langchain.toolCalculator",
+      "position": [
+        2512,
+        -928
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "resource": "all",
+        "additionalFields": {}
+      },
+      "id": "7e2fc4cb-fa40-4a26-9529-24a93c0aaf94",
+      "name": "Hacker News",
+      "type": "n8n-nodes-base.hackerNewsTool",
+      "position": [
+        2528,
+        -800
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "databaseId": 146496,
+        "tableId": 372174,
+        "additionalOptions": {}
+      },
+      "id": "593aae5b-0e90-45f3-8e54-adb87b118067",
+      "name": "Tasks",
+      "type": "n8n-nodes-base.baserowTool",
+      "position": [
+        1888,
+        -1424
+      ],
+      "typeVersion": 1,
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Useful for getting contact information.  For example emails or phone numbers.",
+        "databaseId": 146496,
+        "tableId": 372177,
+        "additionalOptions": {}
+      },
+      "id": "f8a82673-fb60-4caa-b154-467e4c5b158e",
+      "name": "Contacts",
+      "type": "n8n-nodes-base.baserowTool",
+      "position": [
+        1984,
+        -1376
+      ],
+      "typeVersion": 1,
+      "disabled": true
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolWikipedia",
+      "typeVersion": 1,
+      "position": [
+        2336,
+        -880
+      ],
+      "id": "c729d21c-0c00-421c-ac5d-bff10b163c22",
+      "name": "Wikipedia1"
+    }
+  ],
+  "connections": {
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Get Voice File",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "jarvis, AI Assistant 👩🏻‍🏫",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Email": {
+      "ai_tool": [
+        [
+          {
+            "node": "jarvis, AI Assistant 👩🏻‍🏫",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Voice or Text": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Voice File": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Window Buffer Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "jarvis, AI Assistant 👩🏻‍🏫",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Listen for incoming events": {
+      "main": [
+        [
+          {
+            "node": "Voice or Text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "jarvis, AI Assistant 👩🏻‍🏫": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request2": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram": {
+      "main": [
+        [],
+        []
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "HTTP Request2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send message in WhatsApp Business Cloud": {
+      "ai_tool": [
+        [
+          {
+            "node": "jarvis, AI Assistant 👩🏻‍🏫",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a task in Google Tasks": {
+      "ai_tool": [
+        [
+          {
+            "node": "jarvis, AI Assistant 👩🏻‍🏫",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "jarvis, AI Assistant 👩🏻‍🏫",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "jarvis, AI Assistant 👩🏻‍🏫",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent Tool",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reply": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent Tool",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent Tool",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent Tool",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent Tool",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete2": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent Tool",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Many": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent Tool",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Many2": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent Tool",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add Contacts": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent Tool",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Event": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent Tool",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Contacts": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent Tool",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "jarvis, AI Assistant 👩🏻‍🏫",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calculator": {
+      "ai_tool": [
+        [
+          {
+            "node": "jarvis, AI Assistant 👩🏻‍🏫",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Hacker News": {
+      "ai_tool": [
+        [
+          {
+            "node": "jarvis, AI Assistant 👩🏻‍🏫",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wikipedia1": {
+      "ai_tool": [
+        [
+          {
+            "node": "jarvis, AI Assistant 👩🏻‍🏫",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "pinData": {},
+  "triggerCount": 1,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  }
+}
