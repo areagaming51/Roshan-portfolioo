@@ -130,8 +130,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ---- Before/After Slider ----
-    const slider = document.getElementById('beforeAfterSlider');
-    if (slider) {
+    const sliders = document.querySelectorAll('.slider-container');
+    sliders.forEach(slider => {
         const handle = slider.querySelector('.slider-handle');
         const afterImg = slider.querySelector('.after-image');
         let isDragging = false;
@@ -153,7 +153,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const startDragging = (e) => {
             isDragging = true;
             slider.classList.add('dragging');
-            onMove(e);
+            if (e.type !== 'touchstart') {
+                const x = e.clientX;
+                updateSlider(x);
+            }
         };
 
         const stopDragging = () => {
@@ -167,7 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
         window.addEventListener('touchmove', onMove, { passive: true });
         window.addEventListener('mouseup', stopDragging);
         window.addEventListener('touchend', stopDragging);
-    }
+    });
 
     // ---- Gallery tabs (filter) ----
     const tabButtons = document.querySelectorAll('.tab-btn[data-filter]');
