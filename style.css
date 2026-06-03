@@ -1765,7 +1765,7 @@ img {
 /* The original pricing section was replaced by the new one above. */
 
 /* --- RESPONSIVE --- */
-@media (max-width: 800px) {
+@media (max-width: 990px) {
     .navbar {
         top: auto;
         bottom: 20px;
@@ -2558,7 +2558,7 @@ img {
     }
 }
 
-@media (max-width: 800px) {
+@media (max-width: 990px) {
     .reels-wall {
         gap: 14px;
         padding: 0 16px;
