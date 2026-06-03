@@ -117,15 +117,15 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // ---- WhatsApp float: hide near footer ----
-    const waFloat = document.getElementById('whatsappFloat');
-    if (waFloat) {
+    // ---- Email float: hide near footer ----
+    const emailFloatEl = document.getElementById('emailFloat');
+    if (emailFloatEl) {
         window.addEventListener('scroll', () => {
             const footer = document.querySelector('.footer');
             if (!footer) return;
             const footerTop = footer.getBoundingClientRect().top;
-            waFloat.style.opacity = footerTop < window.innerHeight - 20 ? '0' : '1';
-            waFloat.style.pointerEvents = footerTop < window.innerHeight - 20 ? 'none' : '';
+            emailFloatEl.style.opacity = footerTop < window.innerHeight - 20 ? '0' : '1';
+            emailFloatEl.style.pointerEvents = footerTop < window.innerHeight - 20 ? 'none' : '';
         }, { passive: true });
     }
 
@@ -172,23 +172,48 @@ document.addEventListener('DOMContentLoaded', () => {
         window.addEventListener('touchend', stopDragging);
     });
 
-    // ---- Gallery tabs (filter) ----
-    const tabButtons = document.querySelectorAll('.tab-btn[data-filter]');
-    const filterItems = document.querySelectorAll('[data-filter-item]');
-    if (tabButtons.length && filterItems.length) {
-        const applyFilter = (filter) => {
-            filterItems.forEach((el) => {
-                const itemFilter = el.getAttribute('data-filter-item') || 'all';
-                const shouldShow = filter === 'all' || itemFilter === filter;
-                el.style.display = shouldShow ? '' : 'none';
-            });
-        };
+    // ---- Portfolio Vault Category Filtering ----
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const galleryItems = document.querySelectorAll('.gallery-item, .reel-card');
 
-        tabButtons.forEach((btn) => {
+    if (filterButtons.length && galleryItems.length) {
+        filterButtons.forEach(btn => {
             btn.addEventListener('click', () => {
-                tabButtons.forEach(b => b.classList.remove('is-active'));
-                btn.classList.add('is-active');
-                applyFilter(btn.getAttribute('data-filter') || 'all');
+                // Adjust Active State Styling
+                filterButtons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                const target = btn.dataset.target || 'all';
+
+                galleryItems.forEach(item => {
+                    const itemCategory = item.getAttribute('data-category') || 'stills';
+                    if (target === 'all' || itemCategory === target) {
+                        item.style.display = '';
+                        setTimeout(() => item.classList.add('visible'), 50);
+                    } else {
+                        item.style.display = 'none';
+                        item.classList.remove('visible');
+                    }
+                });
+
+                // Toggle visibility of section headers/walls based on filter
+                const eCommerceHeader = document.querySelector('.reels-wall-header-ecom');
+                const eCommerceWall = document.querySelector('.reels-wall-ecom');
+                const saasHeader = document.querySelector('.reels-wall-header-saas');
+                const saasWall = document.querySelector('.reels-wall-saas');
+                const motionHeader = document.querySelector('.reels-wall-header-motion');
+                const motionWall = document.querySelector('.reels-wall-motion');
+                const stillsHeader = document.querySelector('.stills-header');
+                const stillsWall = document.querySelector('.gallery-masonry');
+
+                if (eCommerceHeader) eCommerceHeader.style.display = (target === 'all' || target === 'ads') ? '' : 'none';
+                if (eCommerceWall) eCommerceWall.style.display = (target === 'all' || target === 'ads') ? '' : 'none';
+                if (saasHeader) saasHeader.style.display = (target === 'all' || target === 'saas') ? '' : 'none';
+                if (saasWall) saasWall.style.display = (target === 'all' || target === 'saas') ? '' : 'none';
+                if (motionHeader) motionHeader.style.display = (target === 'all' || target === 'automation') ? '' : 'none';
+                if (motionWall) motionWall.style.display = (target === 'all' || target === 'automation') ? '' : 'none';
+                if (stillsHeader) stillsHeader.style.display = (target === 'all' || target === 'stills') ? '' : 'none';
+                if (stillsWall) stillsWall.style.display = (target === 'all' || target === 'stills') ? '' : 'none';
             });
         });
     }
@@ -255,35 +280,34 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // ---- Autoplay muted previews near viewport ----
-    const previewVideos = document.querySelectorAll('video[data-preview="true"]');
-    if (previewVideos.length && !prefersReducedMotion) {
-        const playSafe = async (video) => {
-            try {
-                video.muted = true;
-                await video.play();
-            } catch {
-                // Autoplay can be blocked; ignore silently.
-            }
-        };
+    // ---- High-Performance Scroll Play Triggering & Lazy Loading ----
+    const lazyVideos = document.querySelectorAll('.lazy-video');
 
-        const pauseSafe = (video) => {
-            try { video.pause(); } catch { }
-        };
-
-        const io = new IntersectionObserver((entries) => {
-            entries.forEach((entry) => {
+    if (lazyVideos.length && 'IntersectionObserver' in window && !prefersReducedMotion) {
+        const videoObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
                 const video = entry.target;
-                if (!(video instanceof HTMLVideoElement)) return;
+                const source = video.querySelector('source');
+
                 if (entry.isIntersecting) {
-                    playSafe(video);
+                    // Lazy load video data stream if source isn't applied yet
+                    if (!video.src && source && source.dataset.src) {
+                        video.src = source.dataset.src;
+                        video.load();
+                    }
+                    
+                    // Attempt clean play execution
+                    video.play().catch(() => { /* Prevent uncaught DOM exceptions if muted blocks run */ });
                 } else {
-                    pauseSafe(video);
+                    video.pause();
                 }
             });
-        }, { threshold: 0.35, rootMargin: '150px 0px 150px 0px' });
+        }, {
+            threshold: 0.25, // Triggers when 25% of card surface frame is fully visible
+            rootMargin: "100px"
+        });
 
-        previewVideos.forEach(v => io.observe(v));
+        lazyVideos.forEach(video => videoObserver.observe(video));
     }
 
 });
